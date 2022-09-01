@@ -1,0 +1,6 @@
+<!-- muestra un usuario gestor en una fila, y haciendo click en el nombre lanza un modal para ver/editar -->
+<hr class='w-100'>
+<div class="row">
+  <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12"><a class="" data-toggle="modal"
+      data-target="#modalUsuarioGestor" (click)='usuarioGestorSeleccionado.emit(usuarioGestor)'><fa-icon [icon]="faEdit" class="mr-2"></fa-icon> {{usuarioGestor.nombre | titlecase}}</a></div>
+</div>

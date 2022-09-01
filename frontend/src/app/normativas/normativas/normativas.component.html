@@ -1,0 +1,40 @@
+<!-- muestra la tabla de las normativas de un cenad -->
+<div class="container-fluid">
+  <div class="row mt-1">
+    <div class="col-9">
+      <h3 class="text-center titulo1"><u>NORMATIVA DEL CENAD</u> </h3>
+    </div>
+    <div class="col-3 text-right" *ngIf='isAdminCenad'>
+      <button class="btn text-white" [routerLink]="['formulario/', idCenad]">Nueva Normativa</button>
+    </div>
+  </div>
+  <hr class='w-100'>
+  <div class="row titulos mt-0">
+    <div class="col-10 col-sm-10 col-md-5 col-lg-5 col-xl-5 titulo"><b>NOMBRE</b></div>
+    <div class="col-10 col-sm-10 col-md-6 col-lg-6 col-xl-6 titulo"><b>DESCRIPCIÓN</b></div>
+    <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"></div>
+  </div>
+  <div *ngFor="let normativa of normativas">
+    <app-normativa [normativa]="normativa" (normativaSeleccionada)="verDatos($event)"></app-normativa>
+  </div>
+  <!-- Modal normativa-->
+  <div class="modal fade" id="modalNormativa" tabindex="-1" role="dialog" aria-labelledby="datosNormativa" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="datosNormativa"><b>Datos Completos de la Normativa</b> </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <app-normativa-ficha *ngIf='normativaVerDatos' [normativa]='normativaVerDatos' (normativaEliminar)='onNormativaEliminar($event)'
+            (normativaEditar)='onNormativaEditar($event)'></app-normativa-ficha>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn text-white" data-dismiss="modal" (click)="ngOnInit()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

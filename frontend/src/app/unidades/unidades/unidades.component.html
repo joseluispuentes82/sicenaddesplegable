@@ -1,0 +1,44 @@
+<!-- muestra la tabla de las unidades -->
+<div class="container-fluid">
+  <div class="row ml-4 mb-0 pl-3">
+    <a class="nav-link text-center volver" [routerLink]="volver" routerLinkActive="router-link-active">
+      <fa-icon class="fa-2x mr-2" [icon]="faVolver"></fa-icon><strong>Volver</strong></a>
+  </div>
+  <div class="row mt-4">
+    <div class="col-9 text-center">
+      <h3 class="text-center titulo1"><u>GESTIÓN DE UNIDADES</u> </h3>
+    </div>
+    <div class="col-3 justify-content-end">
+      <button class="btn text-white" [routerLink]="nuevaUnidad">Nueva Unidad</button>
+    </div>
+  </div>
+  <hr class='w-100'>
+  <div class="row">
+    <div class="col-10 col-sm-10 col-md-3 col-lg-3 col-xl-3 titulo"><b>NOMBRE</b></div>
+    <div class="col-10 col-sm-10 col-md-3 col-lg-3 col-xl-3 titulo text-center"><b>TELÉFONO</b></div>
+    <div class="col-10 col-sm-10 col-md-6 col-lg-6 col-xl-6 titulo"><b>POC</b></div>
+  </div>
+  <div *ngFor="let unidad of unidades">
+    <app-unidad [unidad]="unidad" (unidadSeleccionada)="verDatos($event)"></app-unidad>
+  </div>
+  <!-- Modal unidad-->
+  <div class="modal fade" id="modalUnidad" tabindex="-1" role="dialog" aria-labelledby="datosUnidad" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="datosUnidad"><b>Datos Completos de la Unidad</b> </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <app-unidad-ficha *ngIf='unidadVerDatos' [unidad]='unidadVerDatos' (unidadEliminar)='onUnidadEliminar($event)'
+            (unidadEditar)='onUnidadEditar($event)'></app-unidad-ficha>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn text-white" data-dismiss="modal" (click)="ngOnInit()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

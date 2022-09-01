@@ -1,0 +1,161 @@
+<!-- muestra la vista principal de la gestión de usuarios. si se accede como superadministrador mostrará 
+administradores y normales y si se entra como administrador de un cenad mostrara gestores de su cenad y normales -->
+<div class="container-fluid">
+  <div class="row ml-4 mb-0 pl-3">
+    <a class="nav-link text-center volver" [routerLink]="volver" routerLinkActive="router-link-active">
+      <fa-icon class="fa-2x mr-2" [icon]="faVolver"></fa-icon><strong>Volver</strong>
+    </a>
+  </div>
+  <hr class='w-100'>
+  <div class="row ml-5 p-0" [hidden]='!(isAdministrador && !isMiCenad)'>
+    <p class="titulo">NO ESTÁS AUTORIZADO</p>
+  </div>
+  <div class="row ml-5 p-0">
+    <!-- vista de superadministrador->ve administradores -->
+    <div class="col col-md-6" *ngIf='!isAdministrador; else elseBlock'>
+      <h5 class="text-center titulo">USUARIOS <b>ADMINISTRADORES</b></h5>
+      <hr class="w-100" />
+      <div class="row justify-content-end">
+        <button class="btn text-white mt-1 mb-1" routerLink="formulario-administrador">
+          Nuevo Usuario <b>Administrador</b>
+        </button>
+      </div>
+      <hr class="w-100" />
+      <div class="row titulos">
+        <div class="col-10 col-sm-10 col-md-6 col-lg-6 col-xl-6 titulo">
+          <b>ADMINISTRADOR</b>
+        </div>
+        <div class="col-10 col-sm-10 col-md-6 col-lg-6 col-xl-6 titulo">
+          <b>CENAD/CMT</b>
+        </div>
+      </div>
+      <div *ngFor="let usuarioAdministrador of usuariosAdministrador">
+        <app-usuarioAdministrador [usuarioAdministrador]="usuarioAdministrador"
+          (usuarioAdministradorSeleccionado)="verDatosUsuarioAdministrador($event)"></app-usuarioAdministrador>
+      </div>
+    </div>
+    <!-- vista de administrador->ve gestores de su cenad -->
+    <ng-template #elseBlock>
+      <div class="col col-md-6" [hidden]='!isMiCenad'>
+        <h5 class="text-center titulo">USUARIOS <b>GESTORES</b></h5>
+        <hr class="w-100" />
+        <div class="row justify-content-end">
+          <button class="btn text-white mt-1 mb-1" [routerLink]="['formulario-gestor', idCenad]">
+            Nuevo Usuario <b>Gestor</b>
+          </button>
+        </div>
+        <hr class="w-100" />
+        <div class="row titulos">
+          <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 titulo">
+            <b>GESTOR</b>
+          </div>
+        </div>
+        <div *ngFor="let usuarioGestor of usuariosGestor">
+          <app-usuarioGestor [usuarioGestor]="usuarioGestor"
+            (usuarioGestorSeleccionado)="verDatosUsuarioGestor($event)"></app-usuarioGestor>
+        </div>
+      </div>
+    </ng-template>
+    <div class="col col-md-6  filtro" [hidden]='!(isMiCenad || !isAdministrador)'>
+      <h5 class="text-center titulo">USUARIOS <b>NORMALES</b></h5>
+      <hr class="w-100" />
+      <div class="row justify-content-end">
+        <button class="btn text-white mt-1 mb-1" [routerLink]="nuevoUsuarioNormal">
+          Nuevo Usuario <b>Normal</b>
+        </button>
+      </div>
+      <hr class="w-100" />
+      <div class="row titulos">
+        <div class="col-10 col-sm-10 col-md-6 col-lg-6 col-xl-6 titulo">
+          <b>USUARIO</b>
+        </div>
+        <div class="col-10 col-sm-10 col-md-6 col-lg-6 col-xl-6 titulo">
+          <b>UNIDAD</b>
+        </div>
+      </div>
+      <div *ngFor="let usuarioNormal of usuariosNormal">
+        <app-usuarioNormal [usuarioNormal]="usuarioNormal" (usuarioNormalSeleccionado)="verDatosUsuarioNormal($event)">
+        </app-usuarioNormal>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal usuarioNormal-->
+<div class="modal fade" id="modalUsuarioNormal" tabindex="-1" role="dialog" aria-labelledby="datosUsuarioNormal"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="datosUsuarioNormal">
+          <b>Datos Completos del Usuario Normal</b>
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-usuarioNormal-ficha *ngIf="usuarioNormalVerDatos" [usuarioNormal]="usuarioNormalVerDatos"
+          (usuarioNormalEliminar)="onUsuarioNormalEliminar($event)"
+          (usuarioNormalEditar)="onUsuarioNormalEditar($event)"></app-usuarioNormal-ficha>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn text-white" data-dismiss="modal" (click)="ngOnInit()">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal usuarioAdministrador-->
+<div class="modal fade" id="modalUsuarioAdministrador" tabindex="-1" role="dialog"
+  aria-labelledby="datosUsuarioAdministrador" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="datosUsuarioAdministrador">
+          <b>Datos Completos del Usuario Administrador</b>
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-usuarioAdministrador-ficha *ngIf="usuarioAdministradorVerDatos"
+          [usuarioAdministrador]="usuarioAdministradorVerDatos"
+          (usuarioAdministradorEliminar)="onUsuarioAdministradorEliminar($event)"
+          (usuarioAdministradorEditar)="onUsuarioAdministradorEditar($event)"></app-usuarioAdministrador-ficha>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn text-white" data-dismiss="modal" (click)="ngOnInit()">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal usuarioGestor-->
+<div class="modal fade" id="modalUsuarioGestor" tabindex="-1" role="dialog" aria-labelledby="datosUsuarioGestor"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="datosUsuarioGestor">
+          <b>Datos Completos del Usuario Gestor</b>
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-usuarioGestor-ficha *ngIf="usuarioGestorVerDatos" [usuarioGestor]="usuarioGestorVerDatos"
+          (usuarioGestorEliminar)="onUsuarioGestorEliminar($event)"
+          (usuarioGestorEditar)="onUsuarioGestorEditar($event)"></app-usuarioGestor-ficha>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn text-white" data-dismiss="modal" (click)="ngOnInit()">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

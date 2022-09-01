@@ -1,0 +1,39 @@
+<!-- muestra el formulario para crear nuevas armas -->
+<div class="container-fluid">
+  <div class="row ml-4 pl-3 mb-0 pb-0">
+    <a class="nav-link text-center volver mb-0 pb-0" routerLink="/armas" routerLinkActive="router-link-active">
+      <fa-icon class="fa-2x mr-2" [icon]="faVolver"></fa-icon><strong>Volver</strong></a>
+  </div>
+  <div class="row justify-content-center align-items-start mt-0 pt-0 mb-1">
+    <h3 class="mb-0 pb-0">CREAR ARMA</h3>
+    <hr class="w-100 mb-0 pb-0" />
+  </div>
+  <form #armaForm="ngForm">
+    <div class="form-row py-2">
+      <div class="col-lg-6 col-md-12">
+        <label class="titulo"><b>NOMBRE<sup class="text-danger">*</sup></b></label>
+        <input type="text" class="form-control letra" [(ngModel)]="arma.nombre" placeholder="Nombre del arma"
+          name="nombre" required #nombre="ngModel" [ngClass]="{ 'is-invalid': nombre.invalid && (nombre.dirty || nombre.touched),
+        'is-valid': !nombre.invalid }"/>
+        <div class="text-danger" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+          <div *ngIf="nombre.errors.required">
+            El nombre del arma es obligatorio
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12">
+        <label class="titulo"><b>TIPO DE TIRO<sup class="text-danger">*</sup></b></label>
+        <select name="tipoTiro" id="tipoTiro" [(ngModel)]="arma.tipoTiro">
+          <option class=" letra" *ngFor="let tipoTiro of tiposTiro" [value]="tipoTiro">{{ tipoTiro }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row justify-content-between pt-5">
+      <div class="col-lg-5 col-md-12 mb-4">
+        <button class="btn text-white" role="button" (click)="crearArma()" [disabled]="!armaForm.valid">
+          Crear Arma
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

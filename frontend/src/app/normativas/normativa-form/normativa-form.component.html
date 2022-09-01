@@ -1,0 +1,49 @@
+<!-- muestra el formulario para crear una nueva normativa -->
+<div class="container-fluid">
+  <div class="row ml-4 pl-3 mb-0 pb-0">
+    <a class="nav-link text-center volver pb-0 mb-0" routerLink="../../"  routerLinkActive="router-link-active">
+      <fa-icon class="fa-2x mr-2" [icon]="faVolver"></fa-icon><strong>Volver</strong></a>
+  </div>
+  <div class="row justify-content-center">
+    <h3 class="mt-0 pt-0">CREAR NORMATIVA</h3>
+    <hr class="w-100 mt-0 pt-0" />
+  </div>
+  <form #normativaForm="ngForm">
+    <div class="form-row py-2">
+      <div class="col-lg-4 col-md-12">
+        <label><b>NOMBRE<sup class="text-danger">*</sup></b></label>
+        <input type="text" class="form-control letra" [(ngModel)]="normativa.nombre" placeholder="Nombre de la normativa"
+          name="nombre" required #nombre="ngModel" [ngClass]="{ 'is-invalid': nombre.invalid && (nombre.dirty || nombre.touched),
+          'is-valid': !nombre.invalid }" />
+        <div class="text-danger" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+          <div *ngIf="nombre.errors.required">
+            El nombre de la normativa es obligatorio
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12 col-md-12 pt-3">
+        <label><b>DESCRIPCIÓN<sup class="text-danger">*</sup></b></label>
+        <textarea class="form-control letra" [(ngModel)]="normativa.descripcion" placeholder="Descripción de la normativa"
+          name="descripcion" required #descripcion="ngModel" [ngClass]="{ 'is-invalid': descripcion.invalid && (descripcion.dirty || descripcion.touched),
+          'is-valid': !descripcion.invalid }" rows="5" cols="50"></textarea>
+        <div class="text-danger" *ngIf="descripcion.invalid && (descripcion.dirty || descripcion.touched)">
+          <div *ngIf="descripcion.errors.required">
+            La descripción de la normativa es obligatoria
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-12 pt-3 ml-2">
+        <label class="titulo"><b>ARCHIVO<sup class="text-danger ">*</sup></b><br> (Tamaño máximo permitido: {{sizeMaxDocRecurso}} MB))</label>
+        <input type="text" class="form-control" [(ngModel)]="normativa.nombreArchivo" name="archivo" readonly/>
+        <input type="file" (change)="selectFile($event)" class="form-control"/>
+      </div>
+    </div>
+    <div class="form-row justify-content-between pt-3">
+      <div class="col-lg-5 col-md-12 mb-4">
+        <button class="btn text-white" role="button" (click)="crearNormativa()" [disabled]="!normativaForm.form.valid">
+          Crear Normativa
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

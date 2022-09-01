@@ -1,0 +1,24 @@
+<header>
+  <div class="ml-5">
+    <!-- se muestra si no se esta loggeado -->
+    <div class="row justify-content-start" *ngIf='!getLogged();else estasLoggeado'>
+      <form #loggingForm="ngForm">
+        <div class="form-inline">
+            <input type="text" class="form-control mr-2 letra" [(ngModel)]="nombreUsuario" placeholder="Nombre del usuario"
+              name="nombre" />
+            <input type="password" class="form-control mr-2 letra" [(ngModel)]="password" placeholder="Password del usuario"
+              name="password" />
+        </div>
+      </form>      
+      <a class="btn identificar text-white" (click)="comprobarLogging()">Identificarse</a>
+    </div>
+    <!-- si ya estas loggeado, te muestra como cerrar sesion -->
+    <ng-template #estasLoggeado>
+      <div class="row justify-content-start">
+        <div class="logueado mr-2 mt-2">{{nombreUsuario | titlecase}} logged as {{loggedAs }}</div>
+        <button class="btn cerrar text-white" (click)="cerrarSesion()">Cerrar sesión</button>
+      </div>
+    </ng-template>
+    <hr class='w-100'>
+  </div>
+</header>

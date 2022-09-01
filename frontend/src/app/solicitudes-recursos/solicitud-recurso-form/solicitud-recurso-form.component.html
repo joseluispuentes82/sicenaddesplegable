@@ -1,0 +1,1292 @@
+<!-- Componente FORMULARIO para edición y consulta de Solicitudes -->
+<div class="container-fluid">
+  <div class="row ml-4 pl-3 mb-3 mt-2 pb-0">
+    <div class="col-lg-2 col-md-12">
+      <a class="nav-link text-center volver" routerLink="../../../" routerLinkActive="router-link-active">
+        <fa-icon class="fa-1x" [icon]="faVolver"></fa-icon>&nbsp;<strong>Volver Solicitudes</strong>
+      </a>
+    </div>
+    <div class="col-lg-2 col-md-12">
+      <a class="nav-link text-center volver" [routerLink]="['/principalCenad', idCenad, 'calendarios', idCenad]"
+        routerLinkActive="router-link-active">
+        <fa-icon class="fa-1x" [icon]="faVolver"></fa-icon>&nbsp;<strong>Volver Calendario</strong>
+      </a>
+    </div>
+    <div class="col-lg-5 col-md-12">
+      <h5 class="text-center">{{ nombreUser | uppercase }}</h5>
+    </div>
+    <div class="col-lg-3 col-md-12">
+      <h6 class="text-center" *ngIf="isBorrador || isAdministrador">
+        <fa-icon class="fa-1x" [icon]="faEdit"></fa-icon>&nbsp;--Edición--
+      </h6>
+      <h6 class="text-center" *ngIf="!isBorrador && !isAdministrador">
+        <fa-icon class="fa-1x" [icon]="faLectura"></fa-icon>&nbsp;--Consulta--
+      </h6>
+    </div>
+    <hr class='w-100'>
+  </div>
+  <form class="formulario" #solicitudForm="ngForm">
+    <div class="form-row py-2 justify-content-center">
+      <div class="col-lg-3 col-md-12 text-right mr-5" *ngIf="isAdministrador">
+        <label for="solicitudes" class="mr-2 solicitudes">Estado de la Solicitud:</label>
+        <select name="solicitudesFiltradas" id="solicitudesFiltradas" [(ngModel)]="estadoSeleccionado">
+          <option value="Solicitada">Solicitada</option>
+          <option value="Rechazada">Rechazada</option>
+          <option value="Validada">Validada</option>
+          <option value="Cancelada">Cancelada</option>
+          <option value="Borrador">Borrador</option>
+        </select>
+      </div>
+      <div class="col-lg-2 col-md-12" *ngIf="!isAdministrador">
+        <label for="solicitudes" class="mr-2 estados">Estado de la Solicitud: <sup class="text-danger">*</sup></label>
+        <input type="text" class="form-control" [ngModel]="estado" placeholder="Estado de la Solicitud" name="estado"
+          readonly />
+      </div>
+    </div>
+    <div class="form-row py-2 justify-content-between">
+      <div class="col-lg-3 col-md-12 ml-2 mt-2">
+        <label class="mr-2">Unidad Solicitante: <sup class="text-danger">*</sup></label>
+        <input type="text" class="form-control" [ngModel]="unidad" placeholder="Unidad Solicitante" name="UcoSol"
+          readonly />
+      </div>
+      <div class="col-lg-2 col-md-12 ml-2">
+        <label for="validationServer02">Fecha Solicitud: <sup class="text-danger"></sup></label>
+        <input type="date" class="form-control" [(ngModel)]="fechaSolicitudParse" placeholder="dd-MM-yyyy" required
+          [readonly]="!isAdministrador && !isBorrador" minlength="10" maxlength="10" name="fechaSol" #fechaSol="ngModel"
+          [ngClass]="{
+              'is-invalid': fechaSol.invalid && (fechaSol.dirty || fechaSol.touched),
+              'is-valid': !fechaSol.invalid }" />
+        <div class="text-danger" *ngIf="fechaSol.invalid && (fechaSol.dirty || fechaSol.touched)">
+          <div *ngIf="fechaSol.errors.required">
+            La Fecha de la Solicitud es obligatoria
+          </div>
+          <div *ngIf="fechaSol.errors.minlength && fechaSol.errors.maxlength">
+            La fecha de la Solicitud debe tener 10 caracteres
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-12 ml-2 mr-2">
+        <label>Unidad Usuaria: <sup class="text-danger">*</sup></label>
+        <input type="text" class="form-control" [(ngModel)]="solicitud.unidadUsuaria" placeholder="Unidad Usuaria"
+          name="UcoUsuaria" required [readonly]="!isAdministrador && !isBorrador" minlength="4" maxlength="30"
+          #UcoUsuaria="ngModel" [ngClass]="{
+              'is-invalid': UcoUsuaria.invalid && (UcoUsuaria.dirty || UcoUsuaria.touched),
+              'is-valid': !UcoUsuaria.invalid
+            }" />
+        <div class="text-danger" *ngIf="UcoUsuaria.invalid && (UcoUsuaria.dirty || UcoUsuaria.touched)">
+          <div *ngIf="UcoUsuaria.errors.required">
+            La Unidad Usuaria es obligatoria
+          </div>
+          <div *ngIf="UcoUsuaria.errors.minlength">
+            La Unidad Usuaria debe tener al menos 4 caracteres
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-1 col-md-12 ml-2 mr-2" [hidden]="!isAdministrador">
+        <label>Etiqueta: <sup class="text-danger">*</sup></label>
+        <input type="color" class="form-control" [(ngModel)]="solicitud.etiqueta" placeholder="Etiqueta calendario"
+          name="etiqueta" minlength="4" maxlength="10" #etiqueta="ngModel" [ngClass]="{
+              'is-invalid': etiqueta.invalid && (etiqueta.dirty || etiqueta.touched),
+              'is-valid': !etiqueta.invalid
+            }" />
+        <div class="text-danger" *ngIf="etiqueta.invalid && (etiqueta.dirty || etiqueta.touched)">
+          <div *ngIf="etiqueta.errors.required">
+            La Etiqueta de la Unidad es obligatoria
+          </div>
+          <div *ngIf="etiqueta.errors.minlength">
+            La Etiqueta de la Unidad debe tener al menos 4 caracteres
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-row py-2 mt-2 justify-content-between">
+      <div class="col-lg-3 col-md-12 ml-2">
+        <label>POC para el EJERCICIO: <sup class="text-danger">*</sup></label>
+        <input type="text" class="form-control" [(ngModel)]="solicitud.pocEjercicio" placeholder="POC para el Ejercicio"
+          name="pocEjercicio" required [readonly]="!isAdministrador && !isBorrador" minlength="8" maxlength="30"
+          #pocEjercicio="ngModel" [ngClass]="{
+              'is-invalid': pocEjercicio.invalid && (pocEjercicio.dirty || pocEjercicio.touched),
+              'is-valid': !pocEjercicio.invalid
+            }" />
+        <div class="text-danger" *ngIf="pocEjercicio.invalid && (pocEjercicio.dirty || pocEjercicio.touched)">
+          <div *ngIf="pocEjercicio.errors.required">
+            El POC para el Ejercicio es obligatorio
+          </div>
+          <div *ngIf="pocEjercicio.errors.minlength">
+            El POC para el Ejercicio debe tener al menos 8 caracteres
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-12 ml-2">
+        <label>Jefe Unidad Usuaria: <sup class="text-danger">*</sup></label>
+        <input type="text" class="form-control" [(ngModel)]="solicitud.jefeUnidadUsuaria" placeholder="Jefe UCO Usuaria"
+          name="jefeUcoUsuaria" required [readonly]="!isAdministrador && !isBorrador" minlength="8" maxlength="20"
+          #jefeUcoUsuaria="ngModel" [ngClass]="{
+            'is-invalid': jefeUcoUsuaria.invalid && (jefeUcoUsuaria.dirty || jefeUcoUsuaria.touched),
+            'is-valid': !jefeUcoUsuaria.invalid
+          }" />
+        <div class="text-danger" *ngIf="jefeUcoUsuaria.invalid && (jefeUcoUsuaria.dirty || jefeUcoUsuaria.touched)">
+          <div *ngIf="jefeUcoUsuaria.errors.required">
+            Jefe de la UCO Usuaria es obligatorio
+          </div>
+          <div *ngIf="jefeUcoUsuaria.errors.minlength">
+            El Jefe de UCO Usuaria debe tener al menos 8 caracteres
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-12 ml-2 mr-2">
+        <label>Redactor (Teléfono): <sup class="text-danger">*</sup></label>
+        <input type="text" class="form-control" [(ngModel)]="solicitud.tlfnRedactor"
+          placeholder="RCT UCO/ RCT durante EX" name="tfno" required [readonly]="!isAdministrador && !isBorrador"
+          minlength="7" maxlength="30" #tfno="ngModel" [ngClass]="{
+          'is-invalid': tfno.invalid && (tfno.dirty || tfno.touched),
+          'is-valid': !tfno.invalid
+        }" />
+        <div class="text-danger" *ngIf="tfno.invalid && (tfno.dirty || tfno.touched)">
+          <div *ngIf="tfno.errors.required">
+            El teléfono del redactor es obligatorio
+          </div>
+          <div *ngIf="tfno.errors.minlength">
+            El teléfono del redactor debe tener al menos 15 caracteres
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-row py-2 mt-2 justify-content-between">
+      <div class="col-lg-3 col-md-12 ml-2" *ngIf="!isBorrador && !isAdministrador">
+        <label class="">Categoría: <sup class="text-danger mr-2">*</sup></label>
+        <input type="text" class="form-control ml-2" *ngIf="solicitud.recurso && solicitud.recurso.categoria"
+          [(ngModel)]="solicitud.recurso.categoria.nombre" name="categoria1" readonly />
+      </div>
+      <div class="col-lg-3 col-md-12 ml-2" *ngIf="isBorrador || isAdministrador">
+        <label class="mr-5">Categoría: <sup class="text-danger mr-3">*</sup>{{ categoriaSeleccionada.nombre | uppercase
+          }}</label>
+        <select name="categoriasFiltradas" id="categoriasFiltradas" [(ngModel)]="categoriaSeleccionada"
+          (change)="filtrar()">
+          <option *ngFor="let categoria of categoriasCenad" [ngValue]="categoria">{{ categoria.nombre | uppercase}}
+          </option>
+        </select>
+        <button class="btn-filtros mt-2 ml-1" *ngIf='categoriaSeleccionada' (click)="borrarFiltros()">Borrar Filtros
+          Categoria</button>
+      </div>
+      <div class="col-lg-3 col-md-12 ml-2" *ngIf="!isBorrador && !isAdministrador">
+        <label>Recurso: <sup class="text-danger mr-2">*</sup></label>
+        <input type="text" class="form-control ml-2" *ngIf="solicitud.recurso" [(ngModel)]="solicitud.recurso.nombre"
+          name="recurso1" readonly />
+      </div>
+      <div class="col-lg-3 col-md-12 ml-2" *ngIf="isBorrador || isAdministrador">
+        <label>Recurso: <sup class="text-danger mr-2">*</sup></label>
+        <select name="recursosFiltrados" id="recursosFiltrados" [(ngModel)]="uRlRecursoSeleccionado" required
+          (change)="filtrarTipoFormulario()">
+          <option *ngFor="let recurso of recursosDeCategoria" [value]="recurso.url">{{ recurso.nombre | uppercase}}
+          </option>
+        </select>
+      </div>
+      <div class="col-lg-2 col-md-12 ml-2">
+        <label for="validationServer02">Fecha-Hora Inicio: <sup class="text-danger"></sup></label>
+        <input type="datetime" class="form-control" [(ngModel)]="fechaInicioParse" placeholder="dd-MM-yyyy HH:mm:ss"
+          required [readonly]="!isAdministrador && !isBorrador" name="fechaIni" #fechaIni="ngModel" [ngClass]="{
+              'is-invalid': fechaIni.invalid && (fechaIni.dirty || fechaIni.touched),
+              'is-valid': !fechaIni.invalid
+            }" />
+        <div class="text-danger" *ngIf="fechaIni.invalid && (fechaIni.dirty || fechaIni.touched)">
+          <div *ngIf="fechaIni.errors.required">
+            La Fecha-Hora de Inicio es obligatoria
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-12 mr-2">
+        <label for="validationServer02">Fecha-Hora Fin: <sup class="text-danger"></sup></label>
+        <input type="datetime" class="form-control" [(ngModel)]="fechaFinParse" (change)="verificarFechas()"
+          placeholder="dd-MM-yyyy HH:mm:ss" required [readonly]="!isAdministrador && !isBorrador" name="fechaFin"
+          #fechaFin="ngModel" [ngClass]="{
+              'is-invalid': fechaFin.invalid && (fechaFin.dirty || fechaFin.touched),
+              'is-valid': !fechaFin.invalid }" />
+        <div class="text-danger" *ngIf="fechaFin.invalid && (fechaFin.dirty || fechaFin.touched)">
+          <div *ngIf="fechaFin.errors.required">
+            La Fecha-Hora de Fin es obligatoria
+          </div>
+        </div>
+        <!-- <input type="time" name="" id=""> -->
+      </div>
+    </div>
+
+
+    <!--  -->
+    <!-- DATOS ESPECIFICOS -->
+    <!-- ZONA CAIDA PROYECTILES/EXPLOSIVOS -->
+    <div class="form-group datos-especificos Zona-Caida-Proyectiles" *ngIf="isZonaCaida">
+      <div class="form-row py-2 mt-2 justify-content-between">
+        <div class="col-md-12 ml-2 text-center">
+          <h6><ins>Zona de Caida de Proyectiles/Explosivos</ins></h6>
+        </div>
+      </div>
+      <div class="form-row py-2 mt-2 justify-content-center">
+        <div class="col-lg-3 col-md-12 ml-2">
+          <label for="conMunTraz">Con Munición Trazadora Iluminante Fumigena: <sup class="text-danger"></sup></label>
+          <input class="form-check-input ml-2" type="checkbox" value="" id="conMunTraz" name="conMunTraz"
+            [readonly]="!isBorrador" [(ngModel)]="isConMunTrazIluFumig">
+        </div>
+      </div>
+      <!-- Consulta -->
+      <div *ngIf="!isBorrador">
+        <div *ngIf='solicitudesArmas.length != 0; else elseArmas'>
+          <div class="row mt-2 titulos">
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b></b></div>
+            <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"><b></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 text-center titulo"><b><u>ASENTAMIENTO</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 text-center titulo"><b><u>PUNTO DE CAIDA</u></b>
+            </div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b></b></div>
+          </div>
+          <div class="row mt-0 titulos">
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b>ARMA</b></div>
+            <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"><b>TIPO TIRO</b></div>
+            <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"><b>COORD X</b></div>
+            <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"><b>COORD Y</b></div>
+            <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"><b>COORD X</b></div>
+            <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"><b>COORD Y</b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b>ALCANCE MAX</b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b>ZONA SEG ANGULO</b></div>
+            <hr class='w-100 titulo-solicitudesZC'>
+            <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"></div>
+          </div>
+          <div *ngFor="let solicitudArma of solicitudesArmas">
+            <app-arma [solicitudArma]="solicitudArma" (solicitudArmaSeleccionada)="verDatos($event)"
+              [isConsulta]="isConsultaArmas" (armaSeleccionada)="verDatosArma($event)" [idCenad]="idCenad"
+              *ngIf="solicitud.recurso" [nombreRecurso]="solicitud.recurso.nombre"></app-arma>
+          </div>
+        </div>
+        <ng-template #elseArmas>
+          <div class="row justify-content-center pt-2 mb-2">
+            <h6 class="no-existen">NO EXISTEN ARMAS</h6>
+          </div>
+        </ng-template>
+      </div>
+      <!-- Edicion -->
+      <div class="form-row py-2 mt-2 justify-content-between">
+        <div class="col-11 text-right">
+          <button class="btn text-white" *ngIf="boton || (!boton && isUsuarioNormal && isBorrador)"
+            (click)='mostrarNuevaArma()'>Añadir Arma</button>
+        </div>
+      </div>
+      <div class="card text-left mt-2" *ngIf='nuevaArma'>
+        <img class="card-img-top" alt="">
+        <div class="card-body">
+          <form>
+            <div class="col-lg-3 col-md-12">
+              <label class="titulo pt-2"><b>NOMBRE: <sup class="text-danger">*</sup></b></label>
+              <select name="nombreArma" id="nombreArma" [(ngModel)]="idArmaSeleccionada" (change)="mostrarTipoTiro()">
+                <option class="" *ngFor="let arma of armas" [ngValue]="arma.idArma">{{ arma.nombre }}</option>
+              </select>
+            </div>
+            <div class="col-lg-3 col-md-12">
+              <label class="titulo pt-2"><b>TIPO TIRO: <sup class="text-danger">*</sup></b></label>
+              <label class="ml-2" for="">{{ tipoTiroSeleccionado | uppercase}}</label>
+            </div>
+            <div class="col-lg-3 col-md-12 ml-2 mr-2">
+              <label>Coord X Asentamiento: <sup class="text-danger">*</sup></label>
+              <input type="number" class="form-control" [(ngModel)]="solicitudArma.coordXAsentamiento"
+                placeholder="Coordenadas X del Asentamiento" name="coordAsentamientoX"
+                [readonly]="!isAdministrador && !isBorrador" required #coordAsentamientoX="ngModel" [ngClass]="{
+                    'is-invalid': coordAsentamientoX.invalid && (coordAsentamientoX.dirty || coordAsentamientoX.touched),
+                    'is-valid': !coordAsentamientoX.invalid
+                  }" />
+              <div class="text-danger"
+                *ngIf="coordAsentamientoX.invalid && (coordAsentamientoX.dirty || coordAsentamientoX.touched)">
+                <div *ngIf="coordAsentamientoX.errors.required">
+                  El campo es obligatorio
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-12 ml-2 mr-2">
+              <label>Coord Y Asentamiento: <sup class="text-danger">*</sup></label>
+              <input type="number" class="form-control" [(ngModel)]="solicitudArma.coordYAsentamiento"
+                placeholder="Coordenadas Y del Asentamiento" name="coordAsentamientoY"
+                [readonly]="!isAdministrador && !isBorrador" required #coordAsentamientoY="ngModel" [ngClass]="{
+                    'is-invalid': coordAsentamientoY.invalid && (coordAsentamientoY.dirty || coordAsentamientoY.touched),
+                    'is-valid': !coordAsentamientoY.invalid
+                  }" />
+              <div class="text-danger"
+                *ngIf="coordAsentamientoY.invalid && (coordAsentamientoY.dirty || coordAsentamientoY.touched)">
+                <div *ngIf="coordAsentamientoY.errors.required">
+                  El campo es obligatorio
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-12 ml-2 mr-2">
+              <label>Coord X Punto Caida: <sup class="text-danger">*</sup></label>
+              <input type="number" class="form-control" [(ngModel)]="solicitudArma.coordXPuntoCaida"
+                placeholder="Coordenadas del Punto de Caida" name="coordPuntoCaidaX" required
+                #coordPuntoCaidaX="ngModel" [readonly]="!isAdministrador && !isBorrador" [ngClass]="{
+                    'is-invalid': coordPuntoCaidaX.invalid && (coordPuntoCaidaX.dirty || coordPuntoCaidaX.touched),
+                    'is-valid': !coordPuntoCaidaX.invalid
+                  }" />
+              <div class="text-danger"
+                *ngIf="coordPuntoCaidaX.invalid && (coordPuntoCaidaX.dirty || coordPuntoCaidaX.touched)">
+                <div *ngIf="coordPuntoCaidaX.errors.required">
+                  El cmapo es obligatorio
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-12 ml-2 mr-2">
+              <label>Coord Y Punto Caida: <sup class="text-danger">*</sup></label>
+              <input type="number" class="form-control" [(ngModel)]="solicitudArma.coordYPuntoCaida"
+                placeholder="Coordenadas del Punto de Caida" name="coordPuntoCaida" required #coordPuntoCaidaY="ngModel"
+                [readonly]="!isAdministrador && !isBorrador" [ngClass]="{
+                    'is-invalid': coordPuntoCaidaY.invalid && (coordPuntoCaidaY.dirty || coordPuntoCaidaY.touched),
+                    'is-valid': !coordPuntoCaidaY.invalid
+                  }" />
+              <div class="text-danger"
+                *ngIf="coordPuntoCaidaY.invalid && (coordPuntoCaidaY.dirty || coordPuntoCaidaY.touched)">
+                <div *ngIf="coordPuntoCaidaY.errors.required">
+                  El cmapo es obligatorio
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-12 ml-2 mr-2">
+              <label>Alcance Max: <sup class="text-danger">*</sup></label>
+              <input type="number" class="form-control" [(ngModel)]="solicitudArma.alcanceMax"
+                placeholder="Alcance Máximo" name="alcanceMax" [readonly]="!isAdministrador && !isBorrador" required
+                #alcanceMax="ngModel" [ngClass]="{
+                    'is-invalid': alcanceMax.invalid && (alcanceMax.dirty || alcanceMax.touched),
+                    'is-valid': !alcanceMax.invalid
+                  }" />
+              <div class="text-danger" *ngIf="alcanceMax.invalid && (alcanceMax.dirty || alcanceMax.touched)">
+                <div *ngIf="alcanceMax.errors.required">
+                  El campo es obligatorio
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-12 ml-2 mr-2">
+              <label>Zona Seguridad Angulo: <sup class="text-danger">*</sup></label>
+              <input type="number" class="form-control" [(ngModel)]="solicitudArma.zonaSegAngulo"
+                placeholder="Angulo de la zona de seguridad" name="zonaSegAng"
+                [readonly]="!isAdministrador && !isBorrador" #zonaSegAng="ngModel" [ngClass]="{
+                    'is-invalid': zonaSegAng.invalid && (zonaSegAng.dirty || zonaSegAng.touched),
+                    'is-valid': !zonaSegAng.invalid
+                  }" />
+              <div class="text-danger" *ngIf="zonaSegAng.invalid && (zonaSegAng.dirty || zonaSegAng.touched)">
+                <div *ngIf="zonaSegAng.errors.required">
+                  El campo es obligatorio
+                </div>
+              </div>
+            </div>
+          </form>
+          <div class="col-3 text-left pt-2">
+            <button class="btn text-white " (click)='crearArma()'>Crear Arma</button>
+          </div>
+        </div>
+      </div>
+      <!-- se listan las armas -->
+      <div *ngIf="isBorrador">
+        <div *ngIf="solicitudesArmas.length != 0; else elseArmas">
+          <div class="row mt-2 titulos">
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b></b></div>
+            <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"><b></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 text-center titulo"><b><u>ASENTAMIENTO</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 text-center titulo"><b><u>PUNTO DE CAIDA</u></b>
+            </div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b></b></div>
+          </div>
+          <div class="row mt-0 titulos">
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b>ARMA</b></div>
+            <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"><b>TIPO TIRO</b></div>
+            <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"><b>COORD X</b></div>
+            <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"><b>COORD Y</b></div>
+            <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"><b>COORD X</b></div>
+            <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"><b>COORD Y</b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b>ALCANCE MAX</b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b>ZONA SEG ANGULO</b></div>
+            <hr class='w-100 titulo-solicitudesZC'>
+            <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"></div>
+          </div>
+          <div *ngFor="let solicitudArma of solicitudesArmas">
+            <!-- (idSolicitudArmaBorrada)="onActualizarSolArmasNuevas(idArmaSeleccionada)" -->
+            <app-arma [solicitudArma]="solicitudArma" [isConsulta]="isConsultaArmas"
+              (solicitudArmaSeleccionada)="verDatos($event)" (armaSeleccionada)="verDatosArma($event)"
+              *ngIf='solicitudArma && uRlRecursoSeleccionado' [idCenad]="idCenad"
+              [uRlRecursoSeleccionado]="uRlRecursoSeleccionado"></app-arma>
+          </div>
+        </div>
+        <ng-template #elseArmas>
+          <div class="row justify-content-center pt-2 mb-2">
+            <h6 class="no-existen">NO EXISTEN ARMAS</h6>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- CAMPO TIRO CARROS, VCI/C, PRECISION -->
+    <div class="form-group datos-especificos CT-Carros" *ngIf="isCTcarros">
+      <div class="form-row py-2 mt-2 justify-content-center">
+        <div class="col-md-12 ml-2 text-center">
+          <h6><ins>CAMPO TIRO CARROS, VCI/C, PRECISION</ins></h6>
+        </div>
+      </div>
+      <div class="form-row py-2 mt-2 justify-content-center">
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Tipo Ejercicio: <sup class="text-danger">*</sup></label>
+          <input type="text" class="form-control" [(ngModel)]="solicitud.tipoEjercicio" placeholder="Tipo de Ejercicio"
+            name="tipoEjercicio" [readonly]="!isAdministrador && !isBorrador" required minlength="8" maxlength="30"
+            #tipoEjercicio="ngModel" [ngClass]="{
+                'is-invalid': tipoEjercicio.invalid && (tipoEjercicio.dirty || tipoEjercicio.touched),
+                'is-valid': !tipoEjercicio.invalid
+              }" />
+          <div class="text-danger" *ngIf="tipoEjercicio.invalid && (tipoEjercicio.dirty || tipoEjercicio.touched)">
+            <div *ngIf="tipoEjercicio.errors.required">
+              El campo es obligatorio
+            </div>
+            <div *ngIf="tipoEjercicio.errors.minlength">
+              El campo debe tener al menos 8 caracteres
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-row py-2 mt-2 justify-content-between">
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Arma Principal: <sup class="text-danger">*</sup></label>
+          <input type="text" class="form-control" [(ngModel)]="solicitud.armaPral" placeholder="Arma principal"
+            name="armaPpal" [readonly]="!isAdministrador && !isBorrador" required minlength="6" maxlength="30"
+            #armaPpal="ngModel" [ngClass]="{
+                'is-invalid': armaPpal.invalid && (armaPpal.dirty || armaPpal.touched),
+                'is-valid': !armaPpal.invalid
+              }" />
+          <div class="text-danger" *ngIf="armaPpal.invalid && (armaPpal.dirty || armaPpal.touched)">
+            <div *ngIf="armaPpal.errors.required">
+              El campo es obligatorio
+            </div>
+            <div *ngIf="armaPpal.errors.minlength">
+              El campo debe tener al menos 6 caracteres
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Arma Principal num disparos previstos: <sup class="text-danger">*</sup></label>
+          <input type="number" class="form-control" [readonly]="!isAdministrador && !isBorrador"
+            [(ngModel)]="solicitud.armaPrpalNumDisparosPrev" placeholder="Numero de disparos previstos"
+            name="armappaldisprev" required #armappaldisprev="ngModel" [ngClass]="{
+                'is-invalid': armappaldisprev.invalid && (armappaldisprev.dirty || armappaldisprev.touched),
+                'is-valid': !armappaldisprev.invalid
+              }" />
+          <div class="text-danger"
+            *ngIf="armappaldisprev.invalid && (armappaldisprev.dirty || armappaldisprev.touched)">
+            <div *ngIf="armappaldisprev.errors.required">
+              El campo es obligatorio
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-row py-2 mt-2 justify-content-between">
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Arma Secundaria: <sup class="text-danger">*</sup></label>
+          <input type="text" class="form-control" [(ngModel)]="solicitud.armaSecund" placeholder="Arma secundaria"
+            name="armaSecund" [readonly]="!isAdministrador && !isBorrador" required minlength="6" maxlength="30"
+            #armaSecund="ngModel" [ngClass]="{
+                'is-invalid': armaSecund.invalid && (armaSecund.dirty || armaSecund.touched),
+                'is-valid': !armaSecund.invalid
+              }" />
+          <div class="text-danger" *ngIf="armaSecund.invalid && (armaSecund.dirty || armaSecund.touched)">
+            <div *ngIf="armaSecund.errors.required">
+              El campo es obligatorio
+            </div>
+            <div *ngIf="armaSecund.errors.minlength">
+              El campo debe tener al menos 6 caracteres
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Arma Secundaria num disparos previstos: <sup class="text-danger">*</sup></label>
+          <input type="number" class="form-control" [(ngModel)]="solicitud.armaSecundNumDisparosPrev"
+            placeholder="Numero de disparos previstos" name="armasecunddisprev"
+            [readonly]="!isAdministrador && !isBorrador" required #armasecunddisprev="ngModel" [ngClass]="{
+                'is-invalid': armasecunddisprev.invalid && (armasecunddisprev.dirty || armasecunddisprev.touched),
+                'is-valid': !armasecunddisprev.invalid
+              }" />
+          <div class="text-danger"
+            *ngIf="armasecunddisprev.invalid && (armasecunddisprev.dirty || armasecunddisprev.touched)">
+            <div *ngIf="armasecunddisprev.errors.required">
+              El campo es obligatorio
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- CAMPO TIRO LASER -->
+    <div class="form-group datos-especificos CT-Laser" *ngIf="isCTlaser">
+      <div class="form-row py-2 mt-2 justify-content-center">
+        <div class="col-md-12 ml-2 text-center">
+          <h6><ins>CAMPO TIRO LASER</ins></h6>
+        </div>
+      </div>
+      <div class="form-row py-2 mt-2 justify-content-between">
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Num Blancos Fijos A: <sup class="text-danger">*</sup></label>
+          <input type="number" class="form-control" [(ngModel)]="solicitud.numBlancosFijosA"
+            placeholder="Numeros blancos fijos A" name="numBlancosFijosA"
+            [readonly]="!isAdministrador && !isBorrador" />
+        </div>
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Num Blancos Fijos B: <sup class="text-danger">*</sup></label>
+          <input type="number" class="form-control" [(ngModel)]="solicitud.numBlancosFijosB"
+            placeholder="Numeros blancos fijos B" name="numBlancosFijosB"
+            [readonly]="!isAdministrador && !isBorrador" />
+        </div>
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Num Blancos Fijos C: <sup class="text-danger">*</sup></label>
+          <input type="number" class="form-control" [(ngModel)]="solicitud.numBlancosFijosC"
+            placeholder="Numeros blancos fijos C" name="numBlancosFijosC"
+            [readonly]="!isAdministrador && !isBorrador" />
+        </div>
+      </div>
+      <div class="form-row py-2 mt-2 justify-content-between">
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Num Blancos Fijos D: <sup class="text-danger">*</sup></label>
+          <input type="number" class="form-control" [(ngModel)]="solicitud.numBlancosFijosD"
+            placeholder="Numeros blancos fijos D" name="numBlancosFijosD"
+            [readonly]="!isAdministrador && !isBorrador" />
+        </div>
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Num Blancos Fijos E: <sup class="text-danger">*</sup></label>
+          <input type="number" class="form-control" [(ngModel)]="solicitud.numBlancosFijosE"
+            placeholder="Numeros blancos fijos E" name="numBlancosFijosE"
+            [readonly]="!isAdministrador && !isBorrador" />
+        </div>
+      </div>
+      <div class="form-row py-2 mt-2 justify-content-between">
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Num Blancos Moviles A: <sup class="text-danger">*</sup></label>
+          <input type="number" class="form-control" [(ngModel)]="solicitud.numBlancosMovilesA"
+            placeholder="Numeros blancos moviles A" name="numBlancosMovilesA"
+            [readonly]="!isAdministrador && !isBorrador" />
+        </div>
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Num Blancos Moviles B<sup class="text-danger">*</sup></label>
+          <input type="number" class="form-control" [(ngModel)]="solicitud.numBlancosMovilesB"
+            placeholder="Numeros blancos moviles B" name="numBlancosMovilesB"
+            [readonly]="!isAdministrador && !isBorrador" />
+          <div class="col-lg-3 col-md-12 ml-2 mr-2">
+            <label>Num Blancos Moviles C: <sup class="text-danger">*</sup></label>
+            <input type="number" class="form-control" [(ngModel)]="solicitud.numBlancosMovilesC"
+              placeholder="Numeros blancos moviles C" name="numBlancosMovilesC"
+              [readonly]="!isAdministrador && !isBorrador" />
+          </div>
+        </div>
+        <div class="form-row py-2 mt-2 justify-content-between">
+          <div class="col-lg-3 col-md-12 ml-2 mr-2">
+            <label>Num Blancos Moviles D: <sup class="text-danger">*</sup></label>
+            <input type="number" class="form-control" [(ngModel)]="solicitud.numBlancosMovilesD"
+              placeholder="Numeros blancos moviles D" name="numBlancosMovilesD"
+              [readonly]="!isAdministrador && !isBorrador" />
+          </div>
+          <div class="col-lg-3 col-md-12 ml-2 mr-2">
+            <label>Num Blancos Moviles E<sup class="text-danger">*</sup></label>
+            <input type="number" class="form-control" [readonly]="!isAdministrador && !isBorrador"
+              [(ngModel)]="solicitud.numBlancosMovilesE" placeholder="Numeros blancos moviles E"
+              name="numBlancosMovilesE" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CAMPO TIRO -->
+    <div class="form-group datos-especificos Campo-Tiro" *ngIf="isCampoTiro">
+      <div class="form-row py-2 mt-2 justify-content-center">
+        <div class="col-md-12 ml-2 text-center">
+          <h6><ins>CAMPO TIRO</ins></h6>
+        </div>
+      </div>
+      <div class="form-row py-2 mt-2 justify-content-between">
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Arma 1: <sup class="text-danger">*</sup></label>
+          <input type="text" class="form-control" [(ngModel)]="solicitud.arma1CT" placeholder="Arma 1" name="arma1"
+            [readonly]="!isAdministrador && !isBorrador" required minlength="5" maxlength="20" #arma1="ngModel"
+            [ngClass]="{
+                'is-invalid': arma1.invalid && (arma1.dirty || arma1.touched),
+                'is-valid': !arma1.invalid
+              }" />
+          <div class="text-danger" *ngIf="arma1.invalid && (arma1.dirty || arma1.touched)">
+            <div *ngIf="arma1.errors.required">
+              El campo es obligatorio
+            </div>
+            <div *ngIf="arma1.errors.minlength">
+              El campo debe tener al menos 5 caracter
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Arma 1 Longitud: <sup class="text-danger">*</sup></label>
+          <input type="number" class="form-control" [(ngModel)]="solicitud.arma1CTlongitud"
+            placeholder="Longitud Arma 1" name="arma1Long" [readonly]="!isAdministrador && !isBorrador" required
+            #arma1Long="ngModel" [ngClass]="{
+                'is-invalid': arma1Long.invalid && (arma1Long.dirty || arma1Long.touched),
+                'is-valid': !arma1Long.invalid
+              }" />
+          <div class="text-danger" *ngIf="arma1Long.invalid && (arma1Long.dirty || arma1Long.touched)">
+            <div *ngIf="arma1Long.errors.required">
+              El campo es obligatorio
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-row py-2 mt-2 justify-content-between">
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Arma 2: <sup class="text-danger">*</sup></label>
+          <input type="text" class="form-control" [(ngModel)]="solicitud.arma2CT" placeholder="Arma 2" name="arma2"
+            [readonly]="!isAdministrador && !isBorrador" minlength="5" maxlength="20" #arma2="ngModel" [ngClass]="{
+                  'is-invalid': arma2.invalid && (arma2.dirty || arma2.touched),
+                  'is-valid': !arma2.invalid
+                }" />
+          <div class="text-danger" *ngIf="arma2.invalid && (arma2.dirty || arma2.touched)">
+            <div *ngIf="arma2.errors.minlength">
+              El campo debe tener al menos 5 caracteres
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Arma 2 Longitud: <sup class="text-danger">*</sup></label>
+          <input type="number" class="form-control" [(ngModel)]="solicitud.arma2CTlongitud"
+            placeholder="Longitud Arma 2" name="arma2Long" [readonly]="!isAdministrador && !isBorrador"
+            #arma2Long="ngModel" [ngClass]="{
+                  'is-invalid': arma2Long.invalid && (arma2Long.dirty || arma2Long.touched),
+                  'is-valid': !arma2Long.invalid
+                }" />
+          <div class="text-danger" *ngIf="arma2Long.invalid && (arma2Long.dirty || arma2Long.touched)">
+            <div *ngIf="arma1Long.errors.required">
+              El campo es obligatorio
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- EX ZONA RESTRINGIDA -->
+    <div class="form-group datos-especificos Zona-Restringida" *ngIf="isZonaRestringida">
+      <div class="form-row py-2 mt-2 justify-content-center">
+        <div class="col-md-12 ml-2 text-center">
+          <h6><ins>EX ZONA RESTRINGIDA</ins></h6>
+        </div>
+      </div>
+      <div class="form-row py-2 mt-2 justify-content-center">
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Actividad: <sup class="text-danger">*</sup></label>
+          <input type="text" class="form-control" [(ngModel)]="solicitud.actividad" placeholder="Actividad a realizar"
+            name="actividad" [readonly]="!isAdministrador && !isBorrador" required minlength="10" maxlength="30"
+            #actividad="ngModel" [ngClass]="{
+                'is-invalid': actividad.invalid && (actividad.dirty || actividad.touched),
+                'is-valid': !actividad.invalid
+              }" />
+          <div class="text-danger" *ngIf="actividad.invalid && (actividad.dirty || actividad.touched)">
+            <div *ngIf="actividad.errors.required">
+              El campo es obligatorio
+            </div>
+            <div *ngIf="actividad.errors.minlength">
+              El campo debe tener al menos 2 caracteres
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ACANTONAMIENTO/VIVAC -->
+    <div class="form-group datos-especificos Acantonamiento-Vivac" *ngIf="isAcanVivac">
+      <div class="form-row py-2 mt-2 justify-content-center">
+        <div class="col-md-12 ml-2 text-center">
+          <h6><ins>ACANTONAMIENTO/VIVAC</ins></h6>
+        </div>
+      </div>
+      <div class="form-row py-2 mt-2 justify-content-center">
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Observaciones Vivac: <sup class="text-danger">*</sup></label>
+          <input type="text" class="form-control" [(ngModel)]="solicitud.vivac" placeholder="Observaciones Vivac"
+            name="vivac" [readonly]="!isAdministrador && !isBorrador" maxlength="50" #vivac="ngModel" [ngClass]="{
+                'is-invalid': vivac.invalid && (vivac.dirty || vivac.touched),
+                'is-valid': !vivac.invalid
+              }" />
+          <div class="text-danger" *ngIf="vivac.invalid && (vivac.dirty || vivac.touched)">
+            <div *ngIf="vivac.errors.maxlength">
+              El campo debe tener como maximo 50 caracteres
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ZONA VIDA BATALLON -->
+    <div class="form-group datos-especificos Zona-Vida-Bon" *ngIf="isZonaVidaBon">
+      <div class="form-row py-2 mt-2 justify-content-center">
+        <div class="col-md-12 ml-2 text-center">
+          <h6><ins>ZONA VIDA BATALLON</ins></h6>
+        </div>
+      </div>
+      <div class="form-row py-2 mt-2 justify-content-between">
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Con uso de cocina: <sup class="text-danger">*</sup></label>
+          <input class="form-check-input ml-2" name="conUsoCocina" type="checkbox" value="" id="defaultCheck1"
+            [readonly]="!isAdministrador && !isBorrador" [(ngModel)]="solicitud.conUsoCocina">
+        </div>
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Numero Personas: <sup class="text-danger">*</sup></label>
+          <input type="number" class="form-control" [(ngModel)]="solicitud.numPersonasZVB"
+            placeholder="Numero de Personas" name="numPerZVB" [readonly]="!isAdministrador && !isBorrador" required
+            #numPerZVB="ngModel" [ngClass]="{
+                'is-invalid': numPerZVB.invalid && (numPerZVB.dirty || numPerZVB.touched),
+                'is-valid': !numPerZVB.invalid
+              }" />
+          <div class="text-danger" *ngIf="numPerZVB.invalid && (numPerZVB.dirty || numPerZVB.touched)">
+            <div *ngIf="numPerZVB.errors.required">
+              El campo es obligatorio
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ZONA DE ESPERA -->
+    <div class="form-group datos-especificos Zona-Espera" *ngIf="isZonaEspera">
+      <div class="form-row py-2 mt-2 justify-content-between">
+        <div class="col-md-12 ml-2 text-center">
+          <h6><ins>ZONA DE ESPERA</ins></h6>
+        </div>
+      </div>
+      <div class="form-row py-2 mt-2 justify-content-center">
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Numero de Personas: <sup class="text-danger">*</sup></label>
+          <input type="number" class="form-control" [(ngModel)]="solicitud.numPersonasZE"
+            placeholder="Numero de Personas" name="numPersonas" [readonly]="!isAdministrador && !isBorrador" required
+            #numPersonas="ngModel" [ngClass]="{
+                'is-invalid': numPersonas.invalid && (numPersonas.dirty || numPersonas.touched),
+                'is-valid': !numPersonas.invalid
+              }" />
+          <div class="text-danger" *ngIf="numPersonas.invalid && (numPersonas.dirty || numPersonas.touched)">
+            <div *ngIf="numPersonas.errors.required">
+              El campo es obligatorio
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LAVADEROS -->
+    <div class="form-group datos-especificos Lavaderos" *ngIf="isLavaderos">
+      <div class="form-row py-2 mt-2 justify-content-center">
+        <div class="col-md-12 ml-2 text-center">
+          <h6><ins>LAVADEROS</ins></h6>
+        </div>
+      </div>
+      <div class="form-row py-2 mt-2 justify-content-between">
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Num Vehiculos Cadena: <sup class="text-danger">*</sup></label>
+          <input type="number" class="form-control" [(ngModel)]="solicitud.numVehCadenas"
+            placeholder="Numero de vehiculos de cadena" name="numVehCad" [readonly]="!isAdministrador && !isBorrador"
+            required #numVehCad="ngModel" [ngClass]="{
+                'is-invalid': numVehCad.invalid && (numVehCad.dirty || numVehCad.touched),
+                'is-valid': !numVehCad.invalid
+              }" />
+          <div class="text-danger" *ngIf="numVehCad.invalid && (numVehCad.dirty || numVehCad.touched)">
+            <div *ngIf="numVehCad.errors.required">
+              El campo es obligatorio
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Num Vehiculos Rueda: <sup class="text-danger">*</sup></label>
+          <input type="number" class="form-control" [(ngModel)]="solicitud.numVehRuedas"
+            placeholder="Numero de vehiculos rueda" name="numVehRu" [readonly]="!isAdministrador && !isBorrador"
+            required #numVehRu="ngModel" [ngClass]="{
+                'is-invalid': numVehRu.invalid && (numVehRu.dirty || numVehRu.touched),
+                'is-valid': !numVehRu.invalid
+              }" />
+          <div class="text-danger" *ngIf="numVehRu.invalid && (numVehRu.dirty || numVehRu.touched)">
+            <div *ngIf="numVehRu.errors.required">
+              El campo es obligatorio
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIMULACION REAL LASER -->
+    <div class="form-group datos-especificos Simulacion-Real-Laser" *ngIf="isSimulacionRealLaser">
+      <div class="form-row py-2 mt-2 justify-content-center">
+        <div class="col-md-12 ml-2 text-center">
+          <h6><ins>SIMULACION REAL LASER</ins></h6>
+        </div>
+      </div>
+      <div class="form-row py-2 mt-2 justify-content-between">
+        <div class="col-lg-3 col-md-12 ml-2">
+          <label for="validationServer02">Fecha-Hora Montaje: <sup class="text-danger"></sup></label>
+          <input type="datetime" class="form-control" [(ngModel)]="fechaMontajeParse" placeholder="dd-MM-yyyy HH:mm:ss"
+            [readonly]="!isAdministrador && !isBorrador" required name="fechaMontaje" #fechaMontaje="ngModel" [ngClass]="{
+                'is-invalid': fechaMontaje.invalid && (fechaMontaje.dirty || fechaMontaje.touched),
+                'is-valid': !fechaMontaje.invalid
+              }" />
+          <div class="text-danger" *ngIf="fechaMontaje.invalid && (fechaMontaje.dirty || fechaMontaje.touched)">
+            <div *ngIf="fechaMontaje.errors.required">
+              El campo es obligatorio
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-12 ml-2">
+          <label for="validationServer02">Fecha-Hora Desmontaje: <sup class="text-danger"></sup></label>
+          <input type="datetime" class="form-control" [(ngModel)]="fechaDesmontajeParse"
+            (change)="verificarFechasMontaje()" placeholder="dd-MM-yyyy HH:mm:ss"
+            [readonly]="!isAdministrador && !isBorrador" required name="fechaDesmontaje" #fechaDesmontaje="ngModel"
+            [ngClass]="{
+                'is-invalid': fechaDesmontaje.invalid && (fechaDesmontaje.dirty || fechaDesmontaje.touched),
+                'is-valid': !fechaDesmontaje.invalid
+              }" />
+          <div class="text-danger"
+            *ngIf="fechaDesmontaje.invalid && (fechaDesmontaje.dirty || fechaDesmontaje.touched)">
+            <div *ngIf="fechaDesmontaje.errors.required">
+              El campo es obligatorio
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="form-row py-2 mt-2 justify-content-between">
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Numero Simuladores: <sup class="text-danger">*</sup></label>
+          <input type="text" class="form-control" [(ngModel)]="solicitud.numSimuladores"
+            placeholder="Numero de simuladores" name="numSimu" [readonly]="!isAdministrador && !isBorrador" required
+            minlength="1" maxlength="2" #numSimu="ngModel" [ngClass]="{
+                'is-invalid': numSimu.invalid && (numSimu.dirty || numSimu.touched),
+                'is-valid': !numSimu.invalid
+              }" />
+          <div class="text-danger" *ngIf="numSimu.invalid && (numSimu.dirty || numSimu.touched)">
+            <div *ngIf="numSimu.errors.required">
+              El campo es obligatorio
+            </div>
+            <div *ngIf="numSimu.errors.minlength">
+              El campo debe tener al menos 1 caracter
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Uso Estación de Seguimiento: <sup class="text-danger">*</sup></label>
+          <input type="text" class="form-control" [(ngModel)]="solicitud.usoEstacionSeg"
+            placeholder="Uso Estación Seguimiento" name="usoEstSeg" [readonly]="!isAdministrador && !isBorrador"
+            required minlength="2" maxlength="30" #usoEstSeg="ngModel" [ngClass]="{
+                'is-invalid': usoEstSeg.invalid && (usoEstSeg.dirty || usoEstSeg.touched),
+                'is-valid': !usoEstSeg.invalid
+              }" />
+          <div class="text-danger" *ngIf="usoEstSeg.invalid && (usoEstSeg.dirty || usoEstSeg.touched)">
+            <div *ngIf="usoEstSeg.errors.required">
+              El campo es obligatorio
+            </div>
+            <div *ngIf="usoEstSeg.errors.minlength">
+              El campo debe tener al menos 2 caracteres
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- CAMPO EXPLOSIVOS -->
+    <div class="form-group datos-especificos Campo-Explosivos" *ngIf="isCampoExplosivos">
+      <div class="form-row py-2 mt-2 justify-content-center">
+        <div class="col-md-12 ml-2 text-center">
+          <h6><ins>CAMPO EXPLOSIVOS</ins></h6>
+        </div>
+      </div>
+      <div class="form-row py-2 mt-2 justify-content-center">
+        <div class="col-lg-3 col-md-12 ml-2 mr-2">
+          <label>Explosivo: <sup class="text-danger">*</sup></label>
+          <input type="text" class="form-control" [(ngModel)]="solicitud.explosivo" placeholder="Explosivo"
+            name="explosivo" [readonly]="!isAdministrador && !isBorrador" required minlength="2" maxlength="30"
+            #explosivo="ngModel" [ngClass]="{
+                'is-invalid': explosivo.invalid && (explosivo.dirty || explosivo.touched),
+                'is-valid': !explosivo.invalid
+              }" />
+          <div class="text-danger" *ngIf="explosivo.invalid && (explosivo.dirty || explosivo.touched)">
+            <div *ngIf="explosivo.errors.required">
+              El campo es obligatorio
+            </div>
+            <div *ngIf="explosivo.errors.minlength">
+              El campo debe tener al menos 2 caracteres
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <!-- OTROS -->
+    <div class="form-group datos-especificos Otros" *ngIf="isOtros">
+      <div class="form-row py-2 mt-2 justify-content-center">
+        <div class="col-md-12 ml-2 text-center">
+          <h6><ins>OTROS</ins></h6>
+        </div>
+      </div>
+      <div class="form-row py-2 mt-2 justify-content-center">
+        <label class="ml-2">Datos: <sup class="text-danger">*</sup></label>
+        <div class="col-lg-12 col-md-12 ml-2 text-center">
+          <textarea id="datos" name="datos" rows="10" cols="80" [readonly]="!isAdministrador && !isBorrador"
+            [(ngModel)]="solicitud.otrosDatosEspecificos">
+            </textarea>
+        </div>
+      </div>
+    </div>
+
+
+    <!--  -->
+    <div class="form-row py-2 mt-2 justify-content-center mr-3">
+      <div class="col-lg-12 col-md-12 ml-2">
+        <label class="ml-2">Observaciones: <sup class="text-danger">*</sup></label>
+        <input type="text" class="form-control ml-2" name="observacionesUco" [readonly]="!isBorrador"
+          [(ngModel)]="solicitud.observaciones" placeholder="Observaciones de la UCO" />
+      </div>
+    </div>
+
+    <div class="form-row py-2 mt-2 justify-content-center mr-3">
+      <div class="col-lg-12 col-md-12 ml-2">
+        <label class="ml-2">Observaciones CENAD/CMT: <sup class="text-danger">*</sup></label>
+        <input type="text" class="form-control ml-2" name="observacionesCenad" [readonly]="!isAdministrador"
+          [(ngModel)]="solicitud.observacionesCenad" placeholder="Observaciones del CENAD/CMT" />
+      </div>
+    </div>
+
+    <div class="form-row py-2 mt-2 justify-content-center">
+      <div class="col-lg-12 col-md-12">
+      </div>
+    </div>
+
+    <!-- FICHERO CENAD-->
+    <div class="col-lg-12 col-md-12 pt-3" *ngIf="(isGestor && isValidada) || (isUsuarioNormal && isValidada)">
+      <div class="row mt-1">
+        <div class="col-12 text-center">
+          <h3 class="bienvenido text-center titulo1"><u>FICHEROS CENAD</u> </h3>
+        </div>
+      </div>
+      <div class="row mt-1 justify-content-between">
+        <div class="col-4 text-center">
+          <label for="validationServer02">Fecha Fin Documentacion: <sup class="text-danger"></sup></label>
+        </div>
+        <div class="col-3 text-center">
+          <input type="date" class="form-control" [(ngModel)]="fechaFinDocuParse" placeholder="dd-MM-yyyy" required
+            [readonly]="isUsuarioNormal && isValidada" minlength="10" maxlength="10" name="fechaFinDocu"
+            #fechaFinDocu="ngModel" [ngClass]="{
+                'is-invalid': fechaFinDocu.invalid && (fechaFinDocu.dirty || fechaFinDocu.touched),
+                'is-valid': !fechaFinDocu.invalid }" />
+          <div class="text-danger" *ngIf="fechaFinDocu.invalid && (fechaFinDocu.dirty || fechaFinDocu.touched)">
+            <div *ngIf="fechaFinDocu.errors.required">
+              La Fecha de la Solicitud es obligatoria
+            </div>
+            <div *ngIf="fechaFinDocu.errors.minlength && fechaSol.errors.maxlength">
+              La fecha de la Solicitud debe tener 10 caracteres
+            </div>
+          </div>
+        </div>
+        <div class="col-5 text-right" *ngIf="!isFechaFinDocu">
+          <button class="btn text-white" [disabled]="isUsuarioNormal" (click)='mostrarNuevoFicheroCenad()'>Nuevo Fichero
+            Cenad</button>
+        </div>
+      </div>
+      <div class="card text-left mt-2" *ngIf='nuevoFicheroCenad'>
+        <img class="card-img-top" alt="">
+        <div class="card-body">
+          <form>
+            <div class="col-lg-3 col-md-12">
+              <label class="titulo"><b>NOMBRE<sup class="text-danger">*</sup></b></label>
+              <input type="text" class="form-control letra" [(ngModel)]="fichero.nombre"
+                placeholder="Nombre del fichero" name="nombreFichero" required #nombreFichero="ngModel" [ngClass]="{ 'is-invalid': nombreFichero.invalid && (nombreFichero.dirty || nombreFichero.touched),
+                'is-valid': !nombreFichero.invalid }" />
+              <div class="text-danger" *ngIf="nombreFichero.invalid && (nombreFichero.dirty || nombreFichero.touched)">
+                <div *ngIf="nombreFichero.errors.required">
+                  El nombre del fichero es obligatorio
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-12">
+              <label class="titulo pt-2"><b>CATEGORÍA DE FICHERO<sup class="text-danger">*</sup></b></label>
+              <select name="categoriaFichero" id="categoriaFichero" [(ngModel)]="fichero.categoriaFichero">
+                <option class=" letra" *ngFor="let categoriaFichero of categoriasFichero"
+                  [ngValue]="categoriaFichero.url">{{ categoriaFichero.nombre }}</option>
+              </select>
+            </div>
+            <div class="col-lg-12 col-md-12 pt-3">
+              <label class="titulo"><b>DESCRIPCIÓN<sup class="text-danger">*</sup></b></label>
+              <textarea class="form-control letra" [(ngModel)]="fichero.descripcion"
+                placeholder="Descripción del fichero" name="descripcionFichero" required #descripcionFichero="ngModel"
+                [ngClass]="{ 'is-invalid': descripcionFichero.invalid && (descripcionFichero.dirty || descripcionFichero.touched),
+                'is-valid': !descripcionFichero.invalid }" rows="5" cols="50"></textarea>
+              <div class="text-danger"
+                *ngIf="descripcionFichero.invalid && (descripcionFichero.dirty || descripcionFichero.touched)">
+                <div *ngIf="descripcionFichero.errors.required">
+                  La descripción del Fichero es obligatoria
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-12 pt-3">
+              <label class="titulo"><b>ARCHIVO<sup class="text-danger mr-2">*</sup></b> (Tamaño máximo permitido:
+                {{sizeMaxDocSolicitud}} MB, salvo imagenes ({{sizeMaxEscudo}} MB))</label>
+              <input type="file" (change)="selectFile($event)" class="form-control" />
+            </div>
+          </form>
+          <div class="col-3 text-left pt-2">
+            <button class="btn text-white " (click)='crearFichero()'>Crear Fichero</button>
+          </div>
+        </div>
+      </div>
+      <!-- se listan los ficheros del recurso -->
+      <div class="row mt-5 titulos">
+        <div class="col-10 col-sm-10 col-md-4 col-lg-4 col-xl-4 titulo"><b>NOMBRE</b></div>
+        <div class="col-10 col-sm-10 col-md-3 col-lg-3 col-xl-3 titulo"><b>CATEGORIA DE FICHERO</b></div>
+        <div class="col-10 col-sm-10 col-md-4 col-lg-4 col-xl-4 titulo"><b>DESCRIPCIÓN</b></div>
+        <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"></div>
+      </div>
+      <div *ngFor="let fichero of ficherosCenad">
+        <app-fichero-solicitud [fichero]="fichero" [isUnidad]="false" *ngIf='fichero'
+          (ficheroSeleccionado)='verDatosFichero($event)' (ficheroEliminar)='onEliminarFichero($event)'>
+        </app-fichero-solicitud>
+      </div>
+    </div>
+
+
+    <!-- fichero UNIDAD -->
+    <div class="col-lg-12 col-md-12 pt-3"
+      *ngIf="(isUsuarioNormal && isValidada) || (isUsuarioNormal && isValidada) || (isGestor && isValidada)">
+      <div class="row mt-1">
+        <div class="col-12 text-center">
+          <h3 class="bienvenido text-center titulo1"><u>FICHEROS UNIDAD</u> </h3>
+        </div>
+      </div>
+      <div class="row mt-1 justify-content-center">
+        <div class="col-4 text-center">
+          <label for="validationServer02">Fecha Fin Documentacion: <sup class="text-danger"></sup></label>
+        </div>
+        <div class="col-3 text-center">
+          <input type="date" class="form-control" name="fechaFinDocuUnidad" [ngModel]="fechaFinDocuParse"
+            placeholder="dd-MM-yyyy" readonly />
+        </div>
+        <div class="col-5 text-right" *ngIf="!isFechaFinDocu">
+          <button class="btn text-white" [disabled]="isGestor" (click)='mostrarNuevoFicheroUnidad()'>Nuevo Fichero
+            Unidad</button>
+        </div>
+      </div>
+      <div class="card text-left mt-5" *ngIf='nuevoFicheroUnidad'>
+        <img class="card-img-top" alt="">
+        <div class="card-body">
+          <form>
+            <div class="col-lg-3 col-md-12">
+              <label class="titulo"><b>NOMBRE<sup class="text-danger">*</sup></b></label>
+              <input type="text" class="form-control letra" [(ngModel)]="fichero.nombre"
+                placeholder="Nombre del fichero" name="nombreFichero" required #nombreFichero="ngModel" [ngClass]="{ 'is-invalid': nombreFichero.invalid && (nombreFichero.dirty || nombreFichero.touched),
+                'is-valid': !nombreFichero.invalid }" />
+              <div class="text-danger" *ngIf="nombreFichero.invalid && (nombreFichero.dirty || nombreFichero.touched)">
+                <div *ngIf="nombreFichero.errors.required">
+                  El nombre del fichero es obligatorio
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-12">
+              <label class="titulo pt-2"><b>CATEGORÍA DE FICHERO<sup class="text-danger">*</sup></b></label>
+              <select name="categoriaFichero" id="categoriaFichero" [(ngModel)]="fichero.categoriaFichero">
+                <option class=" letra" *ngFor="let categoriaFichero of categoriasFichero"
+                  [ngValue]="categoriaFichero.url">{{ categoriaFichero.nombre }}</option>
+              </select>
+            </div>
+            <div class="col-lg-12 col-md-12 pt-3">
+              <label class="titulo"><b>DESCRIPCIÓN<sup class="text-danger">*</sup></b></label>
+              <textarea class="form-control letra" [(ngModel)]="fichero.descripcion"
+                placeholder="Descripción del fichero" name="descripcionFichero" required #descripcionFichero="ngModel"
+                [ngClass]="{ 'is-invalid': descripcionFichero.invalid && (descripcionFichero.dirty || descripcionFichero.touched),
+                'is-valid': !descripcionFichero.invalid }" rows="5" cols="50"></textarea>
+              <div class="text-danger"
+                *ngIf="descripcionFichero.invalid && (descripcionFichero.dirty || descripcionFichero.touched)">
+                <div *ngIf="descripcionFichero.errors.required">
+                  La descripción del Fichero es obligatoria
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-12 pt-3">
+              <label class="titulo"><b>ARCHIVO<sup class="text-danger mr-2">*</sup></b> (Tamaño máximo permitido:
+                {{sizeMaxDocSolicitud}} MB, salvo imagenes ({{sizeMaxEscudo}} MB))</label>
+              <input type="file" (change)="selectFile($event)" class="form-control" />
+            </div>
+          </form>
+          <div class="col-3 text-left pt-2">
+            <button class="btn text-white " (click)='crearFichero()'>Crear Fichero</button>
+          </div>
+        </div>
+      </div>
+      <!-- se listan los ficheros del recurso -->
+      <div class="row mt-5 titulos">
+        <div class="col-10 col-sm-10 col-md-4 col-lg-4 col-xl-4 titulo"><b>NOMBRE</b></div>
+        <div class="col-10 col-sm-10 col-md-3 col-lg-3 col-xl-3 titulo"><b>CATEGORIA DE FICHERO</b></div>
+        <div class="col-10 col-sm-10 col-md-4 col-lg-4 col-xl-4 titulo"><b>DESCRIPCIÓN</b></div>
+        <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"></div>
+      </div>
+      <div *ngFor="let fichero of ficherosUnidad">
+        <app-fichero-solicitud *ngIf='fichero' [fichero]="fichero" [isUnidad]="true"
+          (ficheroSeleccionado)='verDatosFichero($event)' (ficheroEliminar)='onEliminarFichero($event)'>
+        </app-fichero-solicitud>
+      </div>
+    </div>
+
+
+
+    <!--  -->
+
+    <div class="form-row justify-content-center mt-5 pt-3 ml-2">
+      <div class="col-lg-5 col-md-12 mb-3">
+        <button class="btn btn-primary" *ngIf="boton; else modificar" role="button" (click)="create()"
+          [disabled]="!solicitudForm.form.valid">
+          Crear Solicitud
+        </button>
+        <ng-template #modificar>
+          <button class="btn btn-primary" role="button" (click)="actualizar()"
+            *ngIf="isBorrador || isAdministrador || (isGestor && isValidada)" [disabled]="!solicitudForm.form.valid">
+            Actualizar
+          </button>
+          <button class="btn btn-primary ml-5" role="button" (click)="tramitarSolicitud()" [hidden]="!isBorrador"
+            [disabled]="!solicitudForm.form.valid">
+            Tramitar Solicitud
+          </button>
+          <button class="btn btn-primary ml-5" role="button" (click)="validarSolicitud()"
+            [hidden]="(isValidada && !isAdministrador) || (!isValidada && !isAdministrador) || (isValidada && isAdministrador)"
+            [disabled]="!solicitudForm.form.valid">
+            Validar Solicitud
+          </button>
+          <button class="btn btn-primary ml-5" role="button" (click)="borrarSolicitud()" [hidden]="!isBorrador"
+            [disabled]="!solicitudForm.form.valid">
+            Borrar Solicitud
+          </button>
+          <button class="btn btn-primary ml-5" data-toggle="modal" data-target="#modalDisponibilidad" role="button"
+            (click)="comprobarDisponibilidad()" *ngIf="isAdministrador && isSolicitada"
+            [disabled]="!solicitudForm.form.valid">
+            Disponibilidad Recurso
+          </button>
+        </ng-template>
+      </div>
+    </div>
+
+  </form>
+
+</div>
+
+<!-- Modal recurso-->
+<div class="modal fade" id="modalDisponibilidad" tabindex="-1" role="dialog" aria-labelledby="datosDisponibilidad"
+  aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header titulo-disponibilidad" *ngIf="solicitud.recurso">
+        <h5 class="modal-title pl-5 ml-5" id="datosDisponibilidad"><b>Disponibilidad del Recurso: </b><i><ins>{{
+              solicitud.recurso.nombre | uppercase }}</ins></i></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row mt-1 titulos-disponibilidad">
+          <div class="col-12 text-center mb-2">
+            <label><ins>FECHA SOLICITADA</ins></label>
+          </div>
+          <div class="col mt-2">
+            <label>Fecha-Hora Inicio: <sup class="text-danger">*</sup></label>
+            <input type="text" class="form-control" [ngModel]="solicitud.fechaHoraInicioRecurso" readonly />
+          </div>
+          <div class="col mt-2 mb-5 pb-5">
+            <label>Fecha-Hora Fin: <sup class="text-danger">*</sup></label>
+            <input type="text" class="form-control" [ngModel]="solicitud.fechaHoraFinRecurso" readonly />
+          </div>
+        </div>
+        <hr class='w-100 titulo-disponibles'>
+        <div class="row mt-5 pt-5">
+          <div class="col-12 text-center pt-3">
+            <h6><ins>SOLICITUDES VALIDADAS</ins></h6>
+          </div>
+        </div>
+        <hr class='w-100 titulo-disponibles'>
+        <div class="row mt-5 mb-2">
+          <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>UCO</u></b></div>
+          <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>SOLICITUD</u></b></div>
+          <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>ESTADO</u></b></div>
+          <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>RECURSO</u></b></div>
+          <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>F. INICIO</u></b></div>
+          <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>F. FIN</u></b></div>
+        </div>
+        <div *ngIf='solicitudesDisponibilidadCenad.length != 0; else elseDisponibles'>
+          <div *ngFor="let solicitud of solicitudesDisponibilidadCenad">
+            <app-solicitud-recurso [solicitud]="solicitud" [idCenad]="idCenad" [isModal]="true"></app-solicitud-recurso>
+          </div>
+        </div>
+        <ng-template #elseDisponibles>
+          <div class="row justify-content-center mt-5">
+            <h6 class="no-existen mt-2">NO EXISTEN SOLICITUDES VALIDADAS PARA ESA FECHA</h6>
+          </div>
+        </ng-template>
+        <hr class='w-100 titulo-disponibles mt-3'>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn text-white" data-dismiss="modal" (click)="ngOnInit()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal SolicitudArma-->
+<div class="modal fade" id="modalSolicitudArma" tabindex="-1" role="dialog" aria-labelledby="datosSolicitudArma"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="datosSolicitudArma">
+          <b>Datos del ARMA</b>
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-arma-ficha-solicitud *ngIf='solicitudArmaVerDatos && armaVerDatos' [solicitudArma]='solicitudArmaVerDatos'
+          [arma]='armaVerDatos' [idCenad]="idCenad" [uRlRecursoSeleccionado]="uRlRecursoSeleccionado"
+          (solicitudArmaEliminar)='onSolicitudArmaEliminar($event)' (armaActualizada)='onArmaActualizada($event)'
+          (solicitudArmaActualizar)='onSolicitudArmaActualizar($event)'></app-arma-ficha-solicitud>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn text-white" data-dismiss="modal">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal fichero-->
+<div class="modal fade" id="modalFichero" tabindex="-1" role="dialog" aria-labelledby="datosFichero" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="datosFichero">
+          <b>Datos Completos del Fichero</b>
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-fichero-solicitud-ficha *ngIf="ficheroVerDatos" [fichero]="ficheroVerDatos" [idSolicitud]="idSolicitud"
+          (ficheroEditar)="onFicheroEditar($event)"></app-fichero-solicitud-ficha>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn text-white" data-dismiss="modal" (click)="ngOnInit()">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

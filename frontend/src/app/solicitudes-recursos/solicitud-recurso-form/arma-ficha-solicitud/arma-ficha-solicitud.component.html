@@ -1,0 +1,119 @@
+<form #armaForm="ngForm" class="formulario-armas" (mouseenter)="actualizarNgModels()">
+  <div class="form-row py-2 mt-2 justify-content-center">
+    <div class="col-lg-5 col-md-12 ml-2">
+      <label for="">ARMA: <sup class="text-danger"></sup></label>
+      <input *ngIf="isConsulta" type="text" name="arma" id="" class="form-control" placeholder="Arma" readonly
+        [(ngModel)]="arma.nombre">
+      <select *ngIf="!isConsulta" name="armas" id="armas" [(ngModel)]="idArmaSeleccionada" (change)="filtrarTipoTiro()">
+        <option *ngFor="let arma of armas" [ngValue]="arma.idArma.toString()">{{ arma.nombre | uppercase}}
+        </option>
+      </select>
+    </div>
+    <div class="col-lg-5 col-md-12 ml-1">
+      <label for="">Tipo tiro: <sup class="text-danger"></sup></label>
+      <input *ngIf="isConsulta" type="text" name="tipoTiro" id="" class="form-control" placeholder="Tipo Tiro" readonly
+        [ngModel]="arma.tipoTiro">
+      <input *ngIf="!isConsulta" type="text" name="tipoTiro" id="" class="form-control" placeholder="Tipo Tiro" readonly
+        [ngModel]="tipoTiroSeleccionado">
+    </div>
+  </div>
+  <div class="form-row py-2 mt-2 justify-content-between">
+    <div class="col-lg-5 col-md-12 ml-1">
+      <label>Coord X Asentamiento: <sup class="text-danger">*</sup></label>
+      <input type="number" class="form-control" [(ngModel)]="solicitudArma.coordXAsentamiento"
+        placeholder="Coordenadas X del Asentamiento" name="coordAsentamientoX" [readonly]="isConsulta" required
+        #coordAsentamientoX="ngModel" [ngClass]="{
+              'is-invalid': coordAsentamientoX.invalid && (coordAsentamientoX.dirty || coordAsentamientoX.touched),
+              'is-valid': !coordAsentamientoX.invalid
+            }" />
+      <div class="text-danger"
+        *ngIf="coordAsentamientoX.invalid && (coordAsentamientoX.dirty || coordAsentamientoX.touched)">
+        <div *ngIf="coordAsentamientoX.errors.required">
+          El campo es obligatorio
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-5 col-md-12 ml-1">
+      <label>Coord Y Asentamiento: <sup class="text-danger">*</sup></label>
+      <input type="number" class="form-control" [(ngModel)]="solicitudArma.coordYAsentamiento"
+        placeholder="Coordenadas Y del Asentamiento" name="coordAsentamientoY" [readonly]="isConsulta" required
+        #coordAsentamientoY="ngModel" [ngClass]="{
+              'is-invalid': coordAsentamientoY.invalid && (coordAsentamientoY.dirty || coordAsentamientoY.touched),
+              'is-valid': !coordAsentamientoY.invalid
+            }" />
+      <div class="text-danger"
+        *ngIf="coordAsentamientoY.invalid && (coordAsentamientoY.dirty || coordAsentamientoY.touched)">
+        <div *ngIf="coordAsentamientoY.errors.required">
+          El campo es obligatorio
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-row py-2 mt-2 justify-content-between">
+    <div class="col-lg-5 col-md-12 ml-1">
+      <label>Coord Punto X Caida: <sup class="text-danger">*</sup></label>
+      <input type="number" class="form-control" [(ngModel)]="solicitudArma.coordXPuntoCaida"
+        placeholder="Coordenadas X del Punto de Caida" name="coordPuntoCaidaX" required #coordPuntoCaidaX="ngModel"
+        [readonly]="isConsulta" [ngClass]="{
+              'is-invalid': coordPuntoCaidaX.invalid && (coordPuntoCaidaX.dirty || coordPuntoCaidaX.touched),
+              'is-valid': !coordPuntoCaidaX.invalid
+            }" />
+      <div class="text-danger" *ngIf="coordPuntoCaidaX.invalid && (coordPuntoCaidaX.dirty || coordPuntoCaidaX.touched)">
+        <div *ngIf="coordPuntoCaidaX.errors.required">
+          El campo es obligatorio
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-5 col-md-12 ml-1">
+      <label>Coord Punto Y Caida: <sup class="text-danger">*</sup></label>
+      <input type="number" class="form-control" [(ngModel)]="solicitudArma.coordYPuntoCaida"
+        placeholder="Coordenadas Y del Punto de Caida" name="coordPuntoCaidaY" required #coordPuntoCaidaY="ngModel"
+        [readonly]="isConsulta" [ngClass]="{
+              'is-invalid': coordPuntoCaidaY.invalid && (coordPuntoCaidaY.dirty || coordPuntoCaidaY.touched),
+              'is-valid': !coordPuntoCaidaY.invalid
+            }" />
+      <div class="text-danger" *ngIf="coordPuntoCaidaY.invalid && (coordPuntoCaidaY.dirty || coordPuntoCaidaY.touched)">
+        <div *ngIf="coordPuntoCaidaY.errors.required">
+          El campo es obligatorio
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-row py-2 mt-2 justify-content-between">
+    <div class="col-lg-5 col-md-12 ml-1">
+      <label>Alcance Max: <sup class="text-danger">*</sup></label>
+      <input type="number" class="form-control" [(ngModel)]="solicitudArma.alcanceMax" placeholder="Alcance máximo"
+        name="alcanceMax" [readonly]="isConsulta" required #alcanceMax="ngModel" [ngClass]="{
+              'is-invalid': alcanceMax.invalid && (alcanceMax.dirty || alcanceMax.touched),
+              'is-valid': !alcanceMax.invalid
+            }" />
+      <div class="text-danger" *ngIf="alcanceMax.invalid && (alcanceMax.dirty || alcanceMax.touched)">
+        <div *ngIf="alcanceMax.errors.required">
+          El campo es obligatorio
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6 col-md-12 ml-1">
+      <label>Zona Seguridad Angulo: <sup class="text-danger">*</sup></label>
+      <input type="number" class="form-control" [(ngModel)]="solicitudArma.zonaSegAngulo"
+        placeholder="Angulo de la zona de seguridad" name="zonaSegAng" [readonly]="isConsulta" #zonaSegAng="ngModel"
+        [ngClass]="{
+              'is-invalid': zonaSegAng.invalid && (zonaSegAng.dirty || zonaSegAng.touched),
+              'is-valid': !zonaSegAng.invalid
+            }" />
+      <div class="text-danger" *ngIf="zonaSegAng.invalid && (zonaSegAng.dirty || zonaSegAng.touched)">
+        <div *ngIf="zonaSegAng.errors.required">
+          El campo es obligatorio
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-row justify-content-between pt-5">
+    <button type="button" class="btn guardar ml-2 mb-2" (click)="guardar()"
+      [disabled]="!armaForm.form.valid">Guardar</button>
+    <button type="button" class="btn eliminar mb-2" (click)="eliminar()">Eliminar</button>
+    <a type="button" class="btn ver-grafica text-white mr-2 mb-2" [href]="verGrafica()" target="_blank">
+      Ver Grafica
+    </a>
+  </div>
+</form>

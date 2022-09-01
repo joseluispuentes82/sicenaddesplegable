@@ -1,0 +1,167 @@
+<!-- Componente principal que muestra las solicitudes agrupadas por estados -->
+<div class="container-fluid">
+  <div class="row mt-2 text-center ml-5 pl-5">
+    <div class="col-lg-2 col-md-12">
+      <a class="nav-link text-center volver" [routerLink]="['/principalCenad', idCenad, 'calendarios', idCenad]"
+        routerLinkActive="router-link-active">
+        <fa-icon class="fa-1x" [icon]="faVolver"></fa-icon>&nbsp;<strong>Volver Calendario</strong>
+      </a>
+    </div>
+    <div class="col-8 pl-5 text-center">
+      <h3 class="titulo1 mr-5 pl-5"><u>SOLICITUDES</u></h3>
+    </div>
+    <div class="col-2">
+      <div class="text-right mt-0 pt-0" *ngIf="isUserNormal || isAdministrador">
+        <button class="btn text-white" [routerLink]="['formulario', idCenad, idSolicitud]">Nueva Solicitud</button>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="mt-0" [hidden]="!isAutenticado">
+    <div class="row solicitadas-validadas mb-3">
+      <div class="col-6 solicitadas">
+        <div class="titulos">
+          <h5 class="text-center titulo-solicitadas">SOLICITADAS<label class="ml-5 pl-5 ver-todas"
+              (click)="verTodas('Solicitada')">
+              <fa-icon [icon]="faVista" class="ml-5 pl-5 mr-2"></fa-icon>Ver Todas
+            </label></h5>
+          <hr class='w-100 titulo-solicitadas'>
+          <div class="row">
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>UCO</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>SOLICITUD</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>ESTADO</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>RECURSO</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>F. INICIO</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>F. FIN</u></b></div>
+          </div>
+        </div>
+        <div *ngIf='solicitudesSolicitadas.length != 0; else elseSolicitadas'>
+          <div *ngFor="let solicitud of solicitudesSolicitadas">
+            <app-solicitud-recurso [solicitud]="solicitud" [idCenad]="idCenad"></app-solicitud-recurso>
+          </div>
+        </div>
+        <ng-template #elseSolicitadas>
+          <div class="row justify-content-center">
+            <h6 class="no-existen">NO EXISTEN</h6>
+          </div>
+        </ng-template>
+        <hr class='w-100 titulo-solicitadas'>
+      </div>
+      <div class="col-6 validadas">
+        <div class="titulos">
+          <h5 class="text-center titulo-validadas">VALIDADAS<label class="ml-5 pl-5 ver-todas"
+              (click)="verTodas('Validada')">
+              <fa-icon [icon]="faVista" class="ml-5 pl-5 mr-2"></fa-icon>Ver Todas
+            </label></h5>
+          <hr class='w-100 titulo-validadas'>
+          <div class="row">
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>UCO</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>SOLICITUD</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>ESTADO</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>RECURSO</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>F. INICIO</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>F. FIN</u></b></div>
+          </div>
+        </div>
+        <div *ngIf='solicitudesValidadas.length != 0; else elseValidadas'>
+          <div *ngFor="let solicitud of solicitudesValidadas">
+            <app-solicitud-recurso [solicitud]="solicitud" [idCenad]="idCenad"></app-solicitud-recurso>
+          </div>
+        </div>
+        <ng-template #elseValidadas>
+          <div class="row justify-content-center">
+            <h6 class="no-existen">NO EXISTEN</h6>
+          </div>
+        </ng-template>
+        <hr class='w-100 titulo-validadas'>
+      </div>
+    </div>
+    <div class="row rechazadas-canceladas">
+      <div class="col-6 rechazadas">
+        <div class="titulos">
+          <h5 class="text-center titulo-rechazadas">RECHAZADAS<label class="ml-5 pl-5 ver-todas"
+              (click)="verTodas('Rechazada')">
+              <fa-icon [icon]="faVista" class="ml-5 pl-5 mr-2"></fa-icon>Ver Todas
+            </label></h5>
+          <hr class='w-100 titulo-rechazadas'>
+          <div class="row">
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>UCO</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>SOLICITUD</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>ESTADO</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>RECURSO</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>F. INICIO</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>F. FIN</u></b></div>
+          </div>
+        </div>
+        <div *ngIf='solicitudesRechazadas.length != 0; else elseRechazadas'>
+          <div *ngFor="let solicitud of solicitudesRechazadas">
+            <app-solicitud-recurso [solicitud]="solicitud" [idCenad]="idCenad"></app-solicitud-recurso>
+          </div>
+        </div>
+        <ng-template #elseRechazadas>
+          <div class="row justify-content-center">
+            <h6 class="no-existen">NO EXISTEN</h6>
+          </div>
+        </ng-template>
+        <hr class='w-100 titulo-rechazadas'>
+      </div>
+      <div class="col-6 canceladas" *ngIf="!isUserNormal">
+        <div class="titulos">
+          <h5 class="text-center titulo-canceladas">CANCELADAS<label class="ml-5 pl-5 ver-todas"
+              (click)="verTodas('Cancelada')">
+              <fa-icon [icon]="faVista" class="ml-5 pl-5 mr-2"></fa-icon>Ver Todas
+            </label></h5>
+          <hr class='w-100 titulo-canceladas'>
+          <div class="row">
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>UCO</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>SOLICITUD</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>ESTADO</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>RECURSO</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>F. INICIO</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>F. FIN</u></b></div>
+          </div>
+        </div>
+        <div *ngIf='solicitudesCanceladas.length != 0; else elseCanceladas'>
+          <div *ngFor="let solicitud of solicitudesCanceladas">
+            <app-solicitud-recurso [solicitud]="solicitud" [idCenad]="idCenad"></app-solicitud-recurso>
+          </div>
+        </div>
+        <ng-template #elseCanceladas>
+          <div class="row justify-content-center">
+            <h6 class="no-existen">NO EXISTEN</h6>
+          </div>
+        </ng-template>
+        <hr class='w-100 titulo-canceladas'>
+      </div>
+      <!-- VISIBLE solo para el usuario normal -->
+      <div class="col-6 borrador" *ngIf="isUserNormal">
+        <div class="titulos">
+          <h5 class="text-center titulo-borrador">BORRADOR<label class="ml-5 pl-5 ver-todas"
+              (click)="verTodas('Borrador')">
+              <fa-icon [icon]="faVista" class="ml-5 pl-5 mr-2"></fa-icon>Ver Todas
+            </label></h5>
+          <hr class='w-100 titulo-borrador'>
+          <div class="row">
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>UCO</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>SOLICITUD</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>ESTADO</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>RECURSO</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>F. INICIO</u></b></div>
+            <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>F. FIN</u></b></div>
+          </div>
+        </div>
+        <div *ngIf='solicitudesBorrador.length != 0; else elseBorrador'>
+          <div *ngFor="let solicitud of solicitudesBorrador">
+            <app-solicitud-recurso [solicitud]="solicitud" [idCenad]="idCenad"></app-solicitud-recurso>
+          </div>
+        </div>
+        <ng-template #elseBorrador>
+          <div class="row justify-content-center">
+            <h6 class="no-existen">NO EXISTEN</h6>
+          </div>
+        </ng-template>
+        <hr class='w-100 titulo-borrador'>
+      </div>
+    </div>
+  </div>
+</div>

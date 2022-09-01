@@ -1,0 +1,55 @@
+<!-- muestra el formulario para crear una nueva categoria de fichero -->
+<div class="container-fluid">
+  <div class="row ml-4 pl-3 mb-0 pb-0">
+    <a class="nav-link text-center volver" routerLink="/categoriasFichero" routerLinkActive="router-link-active">
+      <fa-icon class="fa-2x mr-2" [icon]="faVolver"></fa-icon><strong>Volver</strong></a>
+  </div>
+  <div class="row justify-content-center align-items-start mb-1">
+    <h3 class="mb-0 pt-0">CREAR CATEGORIA DE FICHERO</h3>
+    <hr class="w-100 mb-0 pb-0" />
+  </div>
+  <form #categoriaFicheroForm="ngForm">
+    <div class="form-row py-2">
+      <div class="col-lg-4 col-md-12">
+        <label class="titulo"><b>NOMBRE<sup class="text-danger">*</sup></b></label>
+        <input type="text" class="form-control letra" [(ngModel)]="categoriaFichero.nombre" placeholder="Nombre de la Categoría de Fichero"
+          name="nombre" required #nombre="ngModel" [ngClass]="{ 'is-invalid': nombre.invalid && (nombre.dirty || nombre.touched),
+        'is-valid': !nombre.invalid }" />
+        <div class="text-danger" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+          <div *ngIf="nombre.errors.required">
+            El nombre de la Categoría de Fichero es obligatorio
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-12">
+        <label class="titulo"><b>TIPO<sup class="text-danger">*</sup></b> (0: Imagenes /1: Otros archivos)</label>
+        <input type="number" class="form-control letra" [(ngModel)]="categoriaFichero.tipo" placeholder="Tipo de Categoría de Fichero"
+          name="tipo" required #tipo="ngModel" [ngClass]="{ 'is-invalid': tipo.invalid && (tipo.dirty || tipo.touched),
+        'is-valid': !tipo.invalid }" />
+        <div class="text-danger" *ngIf="tipo.invalid && (tipo.dirty || tipo.touched)">
+          <div *ngIf="tipo.errors.required">
+            El Tipo de Categoría de Fichero es obligatorio
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-12">
+        <label class="titulo"><b>DESCRIPCIÓN<sup class="text-danger">*</sup></b></label>
+        <textarea class="form-control letra" [(ngModel)]="categoriaFichero.descripcion" placeholder="Descripción de la Categoría de Fichero"
+          name="descripcion" required #descripcion="ngModel" [ngClass]="{ 'is-invalid': descripcion.invalid && (descripcion.dirty || descripcion.touched),
+        'is-valid': !descripcion.invalid }" rows="5" cols="50"></textarea>
+        <div class="text-danger" *ngIf="descripcion.invalid && (descripcion.dirty || descripcion.touched)">
+          <div *ngIf="descripcion.errors.required">
+            La descripción de la Categoría de Fichero es obligatoria
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-row justify-content-between pt-3">
+      <div class="col-lg-5 col-md-12 mb-4">
+        <button class="btn text-white" role="button" (click)="crearCategoriaFichero()" [disabled]="!categoriaFicheroForm.form.valid">
+          Crear Categoría de Fichero
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

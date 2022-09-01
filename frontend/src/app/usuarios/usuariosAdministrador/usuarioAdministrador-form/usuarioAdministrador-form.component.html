@@ -1,0 +1,98 @@
+<!-- muestra un formulario para crear un nuevo usuarioAdministrador -->
+<div class="container-fluid">
+  <div class="row ml-4 pl-3">
+    <a class="nav-link text-center volver" routerLink="/usuarios" routerLinkActive="router-link-active">
+      <fa-icon class="fa-2x mr-2" [icon]="faVolver"></fa-icon><strong>Volver</strong>
+    </a>
+  </div>
+  <div class="row justify-content-end align-items-start mb-5">
+    <hr class="w-100" />
+  </div>
+  <div class="mt-4 text-center mb-4">
+    <h3>CREAR USUARIO ADMINISTRADOR</h3>
+  </div>
+  <form #usuarioAdministradorForm="ngForm">
+    <div class="form-row py-2">
+      <div class="col-lg-4 col-md-12">
+        <label class="titulo"><b>NOMBRE DE USUARIO<sup class="text-danger">*</sup></b></label>
+        <input type="text" class="form-control letra" [(ngModel)]="usuarioAdministrador.nombre"
+          placeholder="Nombre del usuario" name="nombre" required #nombre="ngModel" [ngClass]="{ 'is-invalid': nombre.invalid && (nombre.dirty || nombre.touched),
+          'is-valid': !nombre.invalid }" />
+        <div class="text-danger" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+          <div *ngIf="nombre.errors.required">
+            El nombre del usuario es obligatorio
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-12">
+        <label class="titulo"><b>PASSWORD<sup class="text-danger">*</sup></b></label>
+        <input type="text" class="form-control letra" [(ngModel)]="usuarioAdministrador.password"
+          placeholder="Password del usuario" name="password" required #password="ngModel" [ngClass]="{ 'is-invalid': password.invalid && (password.dirty || password.touched),
+          'is-valid': !password.invalid }" />
+        <div class="text-danger" *ngIf="password.invalid && (password.dirty || password.touched)">
+          <div *ngIf="password.errors.required">
+            El password del usuario es obligatorio
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-12">
+        <label class="titulo"><b>TELÉFONO<sup class="text-danger">*</sup></b></label>
+        <input type="tel" class="form-control letra" [(ngModel)]="usuarioAdministrador.tfno"
+          placeholder="Teléfono de contacto del usuario" name="telefono" required minlength="7" maxlength="9"
+          #telefono="ngModel" [ngClass]="{ 'is-invalid': telefono.invalid && (telefono.dirty || telefono.touched),
+          'is-valid': !telefono.invalid }" />
+        <div class="text-danger" *ngIf="telefono.invalid && (telefono.dirty || telefono.touched)">
+          <div *ngIf="telefono.errors.required">
+            El Teléfono del usuario es obligatorio
+          </div>
+          <div *ngIf="telefono.errors.minlength || telefono.errors.maxlength">
+            El Teléfono debe tener 7-9 carácteres
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-8 col-md-12 pt-3">
+        <label class="titulo"><b>DESCRIPCIÓN<sup class="text-danger">*</sup></b></label>
+        <textarea class="form-control letra" [(ngModel)]="usuarioAdministrador.descripcion"
+          placeholder="Descripción del usuario" name="descripcion" required #descripcion="ngModel" [ngClass]="{ 'is-invalid': descripcion.invalid && (descripcion.dirty || descripcion.touched),
+          'is-valid': !descripcion.invalid }" rows="5" cols="50"></textarea>
+        <div class="text-danger" *ngIf="descripcion.invalid && (descripcion.dirty || descripcion.touched)">
+          <div *ngIf="descripcion.errors.required">
+            La descripción del usuario es obligatoria
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-12 pt-3">
+        <label class="titulo"><b>CENAD<sup class="text-danger">*</sup></b></label>
+        <select name="cenad" id="cenad" [(ngModel)]="usuarioAdministrador.cenad">
+          <option class=" letra" *ngFor="let cenad of cenads" [ngValue]="cenad.url">{{ cenad.nombre }}</option>
+        </select>
+      </div>
+      <div class="col-lg-6 col-md-12 pt-3">
+        <label class="titulo"><b>EMAIL</b></label>
+        <input type="email" class="form-control letra" [(ngModel)]="usuarioAdministrador.email" placeholder="Email del usuario"
+          name="email" #email="ngModel" [ngClass]="{ 'is-invalid': email.invalid && (email.dirty || email.touched),
+          'is-valid': !email.invalid }" />
+        <div class="text-danger" *ngIf="email.invalid && (email.dirty || email.touched)">
+          <div *ngIf="email.errors.required">
+            El Email del usuario es obligatorio
+          </div>
+          <div *ngIf="email.errors.email">
+            Introduzca un email valido ("@")
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-12 pt-3">
+        <label class="titulo pr-2"><b>RECIBIR NOTIFICACIONES</b></label><br>
+        <input type="checkbox" class="form-control" name="emailAdmitido" [(ngModel)]='usuarioAdministrador.emailAdmitido'/>
+      </div>
+      <div class="form-row justify-content-between pt-5">
+        <div class="col-lg-12 col-md-12 mb-4">
+          <button class="btn text-white" role="button" (click)="crearUsuarioAdministrador()"
+            [disabled]="!usuarioAdministradorForm.form.valid">
+            Crear Usuario Administrador
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

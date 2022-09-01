@@ -1,0 +1,43 @@
+<!-- muestra la tabla de las armas -->
+<div class="container-fluid">
+  <div class="row ml-4 mb-0 pl-3">
+    <a class="nav-link text-center volver" routerLink="/superadministrador" routerLinkActive="router-link-active">
+      <fa-icon class="fa-2x mr-2" [icon]="faVolver"></fa-icon><strong>Volver</strong></a>
+  </div>
+  <div class="row mt-4">
+    <div class="col-9 text-center">
+      <h3 class="text-center titulo1"><u>GESTIÓN DE ARMAS</u> </h3>
+    </div>
+    <div class="col-3 justify-content-end">
+      <button class="btn text-white" routerLink="/armas/formulario">Nuevo Arma</button>
+      </div>
+  </div>
+  <hr class='w-100'>
+  <div class="row">
+    <div class="col-10 col-sm-10 col-md-6 col-lg-6 col-xl-6 titulo"><b>NOMBRE</b></div>
+    <div class="col-10 col-sm-10 col-md-6 col-lg-6 col-xl-6 titulo"><b>TIPO DE TIRO</b></div>
+  </div>
+  <div *ngFor="let arma of armas">
+    <app-arma [arma]="arma" (armaSeleccionada)="verDatos($event)"></app-arma>
+  </div>
+  <!-- Modal arma-->
+  <div class="modal fade" id="modalArma" tabindex="-1" role="dialog" aria-labelledby="datosArma" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="datosArma"><b>Datos Completos del Arma</b> </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <app-arma-ficha *ngIf='armaVerDatos' [arma]='armaVerDatos' (armaEliminar)='onArmaEliminar($event)'
+            (armaEditar)='onArmaEditar($event)'></app-arma-ficha>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn text-white" data-dismiss="modal" (click)="ngOnInit()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

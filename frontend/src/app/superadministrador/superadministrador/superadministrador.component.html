@@ -1,0 +1,89 @@
+<!-- muestra la vista principal del superadministrador -->
+<div class="container-fluid">
+  <div class="row">
+    <div class="col col-md-2 p-3">
+      <img class="madoc" width="80" height="110" alt="MADOC" src="assets/madoc.png" />
+    </div>
+    <div class="col col-md-7 align-self-center mt-4">
+      <h3 class="bienvenido text-center titulo1"><u>SUPERADMINISTRADOR</u></h3>
+    </div>
+    <div class="col col-md-1 mt-4 ml-5">
+      <h2 class="text-center">SICENAD</h2>
+    </div>
+  </div>
+  <div class="row align-items-center">
+    <div class="col-4 pl-0">
+      <a class="nav-link ml-4 home" routerLink="/" routerLinkActive="router-link-active">
+        <fa-icon class="fa-2x mr-2" [icon]="faHome"></fa-icon><strong>Home</strong>
+      </a>
+    </div>
+    <div class="col-8 text-right">
+      <button class="btn usuario text-white mr-2" routerLink="/usuarios">
+        <b>Usuarios</b>
+      </button>
+      <button class="btn unidad text-white mr-2" routerLink="/unidades">
+        <b>Unidades</b>
+      </button>
+      <button class="btn tipoFormulario text-white mr-2" routerLink="/tiposFormulario">
+        <b>Tipos de Formulario</b>
+      </button>
+      <button class="btn categoriaFichero text-white mr-2" routerLink="/categoriasFichero">
+        <b>Categorías de Ficheros</b>
+      </button>
+      <button class="btn usuario text-white mr-2" routerLink="/armas">
+        <b>Armas</b>
+      </button>
+    </div>
+    <hr class="w-100" />
+  </div>
+  <div class="row ml-5 p-0">
+    <div class="col col-md-12">
+      <h5 class="text-center titulo"><b>CENAD,s/CMT,s</b></h5>
+      <hr class="w-100" />
+      <div class="row justify-content-end mb-1 mt-1">
+        <button class="btn text-white mr-3" routerLink="formulario-cenad">
+          Nuevo <b>CENAD/CMT</b>
+        </button>
+      </div>
+      <hr class="w-100" />
+      <div class="row mt-2 titulos">
+        <div class="col-10 col-sm-10 col-md-4 col-lg-4 col-xl-4 titulo">
+          <b>CENAD/CMT</b>
+        </div>
+        <div class="col-10 col-sm-10 col-md-4 col-lg-4 col-xl-4 titulo">
+          <b>PROVINCIA</b>
+        </div>
+        <div class="col-10 col-sm-10 col-md-4 col-lg-4 col-xl-4 titulo">
+          <b>ADMINISTRADOR</b>
+        </div>
+      </div>
+      <div *ngFor="let cenad of cenads">
+        <app-cenad [cenad]="cenad" (cenadSeleccionado)="verDatosCenad($event)"></app-cenad>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal cenad-->
+<div class="modal fade" id="modalCenad" tabindex="-1" role="dialog" aria-labelledby="datosCenad" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="datosCenad">
+          <b>Datos Completos del CENAD/CMT</b>
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-cenad-ficha *ngIf="cenadVerDatos" [cenad]="cenadVerDatos" (cenadEliminar)="onCenadEliminar($event)"
+          (cenadEditar)="onCenadEditar($event)"></app-cenad-ficha>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn text-white" data-dismiss="modal" (click)="ngOnInit()">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

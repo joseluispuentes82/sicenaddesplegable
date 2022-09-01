@@ -1,0 +1,84 @@
+<!-- Componente que muestra todas las solicitudes (con filtros) -->
+<div class="container-fluid mb-5 pb-1 mt-1">
+  <div class="row ml-4 pl-3 mb-3 mt-0 pb-0">
+    <a class="nav-link text-center volver" routerLink="../../" routerLinkActive="router-link-active">
+      <fa-icon class="fa-1x" [icon]="faVolver"></fa-icon>&nbsp;<strong>Volver</strong>
+    </a>
+  </div>
+  <div class="row mt-0 mb-4 justify-content-center">
+    <div class="col-6 col-md-2 por-estados">
+      <label for="solicitudes" class="mr-2 solicitudes">Elige un Tipo de Solicitud:</label>
+      <select name="solicitudesFiltradas" id="solicitudesFiltradas" [(ngModel)]="estadoSeleccionado"
+        (change)="filtrar()">
+        <option value="Todas">Todas</option>
+        <option value="Solicitada">Solicitada</option>
+        <option value="Rechazada">Rechazada</option>
+        <option value="Validada">Validada</option>
+        <option value="Cancelada">Cancelada</option>
+        <option value="Borrador">Borrador</option>
+      </select>
+    </div>
+    <div class="col-6 col-md-2 por-unidad" *ngIf="!isUserNormal">
+      <label for="unidades" class="mr-2 unidades">Elige una Unidad:</label>
+      <select name="categoriasFiltradas" id="categoriasFiltradas" [(ngModel)]="unidadSeleccionada" (change)="filtrar()">
+        <option *ngFor="let unidad of unidades" [ngValue]="unidad">{{ unidad.nombre | uppercase}}</option>
+      </select>
+      <button class="mr-1 mt-2" *ngIf='unidadSeleccionada' (click)="borrarFiltro('unidad')">Borrar Filtro
+        Unidad</button>
+    </div>
+    <div class="col-6 col-md-3  por-categorias" *ngIf="!isGestor">
+      <label for="categorias" class="mr-1 categorias">Elige una Categoría:</label>
+      <select name="categoriasFiltradas" id="categoriasFiltradas" [(ngModel)]="categoriaSeleccionada"
+        (change)="filtrar()">
+        <option *ngFor="let categoria of categoriasCenad" [ngValue]="categoria">{{ categoria.nombre | uppercase}}
+        </option>
+      </select>
+      <button class="mr-1 mt-2" *ngIf='categoriaSeleccionada' (click)="borrarFiltro('categoria')">Borrar Filtro
+        Categoria</button>
+    </div>
+    <div class="col-6 col-md-5 por-fecha">
+      <label for="fechas" class="mr-2 fechas">Fecha Desde:</label>
+      <input type="date" pattern="[0-9]{2}-[0-9]{2}-[0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2}" name="inicioRecurso"
+        id="inicioRecurso" [(ngModel)]="fechaInicioSeleccionada">
+      <label for="fechas" class=" ml-3 mr-2 fechas">Fecha Hasta:</label>
+      <input type="date" name="finRecurso" id="finRecurso" [(ngModel)]="fechaFinSeleccionada" (change)="filtrar()">
+      <input class="form-check-input ml-2" type="checkbox" value="" id="defaultCheck1" [(ngModel)]="isFechaActual"
+        (change)="filtrar()">
+      <label class="form-check-label ml-2 pl-3 fechas" for="defaultCheck1">Fecha Actual</label>
+      <button class="ml-2 mr-1 mt-2" *ngIf='fechaInicioSeleccionada && fechaFinSeleccionada'
+        (click)="borrarFiltro('fecha')">Borrar Filtro Fecha</button>
+      <div class="text-danger mt-2 error" *ngIf="fechaFinSeleccionada < fechaInicioSeleccionada">
+        La Fecha HASTA debe ser menor o igual que la de DESDE
+      </div>
+    </div>
+
+  </div>
+  <div class="row mb-5 pb-5">
+    <div class="col-12 todas">
+      <div class="titulos">
+        <h5 class="text-center titulo-todas">TODAS LAS SOLICITUDES</h5>
+        <div class="row">
+          <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>UCO</u></b></div>
+          <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>SOLICITUD</u></b></div>
+          <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>ESTADO</u></b></div>
+          <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>RECURSO</u></b></div>
+          <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>F. INICIO</u></b></div>
+          <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>F. FIN</u></b></div>
+        </div>
+      </div>
+      <div *ngIf='solicitudesFiltradas.length != 0; else elseFiltradas'>
+        <div *ngFor="let solicitud of solicitudesFiltradas">
+          <app-solicitud-recurso [solicitud]="solicitud" [idCenad]="idCenad"></app-solicitud-recurso>
+        </div>
+      </div>
+      <ng-template #elseFiltradas>
+        <div class="row justify-content-center pt-2 mb-4 pb-4" *ngIf="(isGestor && !isBorrador) || !isGestor">
+          <h6 class="no-existen">NO EXISTEN</h6>
+        </div>
+        <div class="row justify-content-center pt-2 mb-4 pb-4" *ngIf="isGestor && isBorrador">
+          <h6 class="no-existen">NO TIENE PRIVILEGIOS SUFICIENTES PARA CONSULTAR ESTAS SOLICITUDES</h6>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

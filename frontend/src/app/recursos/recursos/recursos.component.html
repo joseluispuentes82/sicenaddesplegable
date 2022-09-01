@@ -1,0 +1,50 @@
+<!-- muestra la tabla de los recursos de un cenad -->
+<div class="container-fluid">
+  <div class="row mt-1">
+    <div class="col-9 text-center">
+      <h3 class="text-center titulo1"><u>GESTIÓN DE RECURSOS</u> </h3>
+    </div>
+    <div class="col-3 text-right">
+      <button class="btn text-white" [routerLink]="['formulario', idCenad]">Nuevo Recurso</button>
+    </div>
+  </div>
+  <label for="categorias" class="mr-2 mt-2" *ngIf='categoriaSeleccionada'>Categoría Seleccionada: <span> {{categoriaSeleccionada.nombre | uppercase}}</span></label>
+ <div class="mt-0">
+    <label for="categorias" class="mr-2">Elige una categoría:</label>
+    <select name="categoriasFiltradas" id="categoriasFiltradas" [(ngModel)]="categoriaSeleccionada" (change)='filtrar()'>
+      <option *ngFor="let categoria of categoriasFiltradas" [ngValue]="categoria">{{ categoria.nombre | uppercase}}</option>
+    </select>
+    <button class="mr-2 ml-3" *ngIf='categoriaSeleccionada' (click)='borrarFiltros()'>Borrar filtros</button>
+</div>
+  <hr class='w-100'>
+  <div class="row titulos">
+    <div class="col-10 col-sm-10 col-md-3 col-lg-3 col-xl-3 titulo"><b>NOMBRE</b></div>
+    <div class="col-10 col-sm-10 col-md-3 col-lg-3 col-xl-3 titulo"><b>CATEGORIA</b></div>
+    <div class="col-10 col-sm-10 col-md-3 col-lg-3 col-xl-3 titulo"><b>TIPO FORMULARIO</b></div>
+    <div class="col-10 col-sm-10 col-md-3 col-lg-3 col-xl-3 titulo"><b>GESTOR</b></div>
+  </div>
+  <div *ngFor="let recurso of recursos">
+    <app-recurso [recurso]="recurso" *ngIf='recurso' (recursoSeleccionado)="verDatos($event)"></app-recurso>
+  </div>
+  <!-- Modal recurso-->
+  <div class="modal fade" id="modalRecurso" tabindex="-1" role="dialog" aria-labelledby="datosRecurso"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="datosRecurso"><b>Datos Completos del Recurso</b> </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <app-recurso-ficha *ngIf='recursoVerDatos' [recurso]='recursoVerDatos'
+            (recursoEliminar)='onRecursoEliminar($event)' (recursoEditar)='onRecursoEditar($event)'></app-recurso-ficha>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn text-white" data-dismiss="modal" (click)="ngOnInit()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

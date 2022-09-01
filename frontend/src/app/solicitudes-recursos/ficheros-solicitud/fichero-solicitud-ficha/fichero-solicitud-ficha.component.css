@@ -1,0 +1,20 @@
+.btn {
+  background: #a3b18a;
+}
+
+.titulo {
+  color: #3a5a40;
+}
+
+.guardar:hover {
+  background: green;
+}
+
+.eliminar:hover {
+  background: red;
+}
+
+.letra,
+select {
+  color: #588157;
+}

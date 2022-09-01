@@ -1,0 +1,36 @@
+<!-- COMPONENTE QUE MUESTRA LAS SOLICITUDESARMAS DE UNA SOLICITUD -->
+<div class="row mt-2 titulos ml-1" *ngIf="!isConsulta" data-toggle="modal" data-target="#modalSolicitudArma" (click)='emitirDatos(solicitudArma, arma)'>
+  <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b>{{ arma.nombre }}</b></div>
+  <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"><b>{{ arma.tipoTiro }}</b></div>
+  <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"><b>{{ solicitudArma.coordXAsentamiento }}</b></div>
+  <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"><b>{{ solicitudArma.coordYAsentamiento }}</b></div>
+  <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"><b>{{ solicitudArma.coordXPuntoCaida }}</b></div>
+  <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"><b>{{ solicitudArma.coordYPuntoCaida }}</b></div>
+  <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b>{{ solicitudArma.alcanceMax }}</b></div>
+  <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b>{{ solicitudArma.zonaSegAngulo }}</b></div>
+  <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1">
+    <label class="p-1">
+      <a class="text-white ver-grafica" [href]="verGrafica()" target="_blank" *ngIf="solicitudArma">
+        <fa-icon [icon]="faVista" class="mr-2"></fa-icon>Ver Gráfica
+      </a>
+    </label>
+  </div>
+</div>
+<div class="row mt-2 titulos ml-1" *ngIf="isConsulta">
+  <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo-consulta"><b>{{ arma.nombre }}</b></div>
+  <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo-consulta"><b>{{ arma.tipoTiro }}</b></div>
+  <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo-consulta"><b>{{ solicitudArma.coordXAsentamiento }}</b></div>
+  <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo-consulta"><b>{{ solicitudArma.coordYAsentamiento }}</b></div>
+  <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo-consulta"><b>{{ solicitudArma.coordXPuntoCaida }}</b></div>
+  <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo-consulta"><b>{{ solicitudArma.coordYPuntoCaida }}</b></div>
+  <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo-consulta"><b>{{ solicitudArma.alcanceMax }}</b></div>
+  <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo-consulta"><b>{{ solicitudArma.zonaSegAngulo }}</b></div>
+  <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1">
+    <label class="p-1">
+      <a class="text-white ver-grafica" [href]="verGrafica()" target="_blank" *ngIf="solicitudArma">
+        <fa-icon [icon]="faVista" class="mr-2"></fa-icon>Ver Gráfica
+      </a>
+    </label>
+  </div>
+</div>
+

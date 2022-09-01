@@ -1,0 +1,39 @@
+<!-- muestra la tabla con los recursos de un cenad -->
+<div class="container-fluid">
+  <div class="row mt-1 mb-3">
+    <div class="col-3" *ngIf='isGestorCenad; else noGestor'>
+      <button class="btn text-white" *ngIf='cambioBoton;else verTodos' (click)='verSoloMisRecursos()'>Ver mis
+        recursos</button>
+      <ng-template #verTodos>
+        <button class="btn text-white" (click)='ngOnInit()'>Ver todos</button>
+      </ng-template>
+    </div>
+    <ng-template #noGestor>
+      <div class="col-3"></div>
+    </ng-template>
+    <div class="col-9">
+      <h3 class="text-center titulo1"><u>RECURSOS</u> </h3>
+    </div>
+  </div>
+  <div *ngIf='!isGestorCenad'>
+    <label for="categorias" class="mr-2 mt-2" *ngIf='categoriaSeleccionada'>Categoría Seleccionada: <span>
+        {{categoriaSeleccionada.nombre | uppercase}}</span></label>
+    <div class="mt-0">
+      <label for="categorias" class="mr-2">Elige una categoría:</label>
+      <select name="categoriasFiltradas" id="categoriasFiltradas" [(ngModel)]="categoriaSeleccionada"
+        (change)='filtrar()'>
+        <option *ngFor="let categoria of categoriasFiltradas" [ngValue]="categoria">{{ categoria.nombre | uppercase}}
+        </option>
+      </select>
+      <button class="btn text-white mr-2 ml-3" *ngIf='categoriaSeleccionada' (click)='borrarFiltros()'>Borrar
+        filtros</button>
+    </div>
+  </div>
+  <hr class='w-100'>
+  <div class="row titulos">
+    <div class="col-10 col-sm-10 col-md-6 col-lg-6 col-xl-6 titulo"><b>NOMBRE</b></div>
+    <div class="col-10 col-sm-10 col-md-6 col-lg-6 col-xl-6 titulo"><b>CATEGORIA</b></div>
+  </div>
+  <div *ngFor="let recurso of recursos">
+    <app-consultaRecurso [recurso]="recurso" *ngIf='recurso'></app-consultaRecurso>
+  </div>

@@ -1,0 +1,228 @@
+<!-- muestra el contenido del recurso, con diferente vista segun este logueado como gestor de ese recurso o no -->
+<div class="container-fluid">
+  <div class="row ml-0 pl-0 mb-0 pb-0">
+    <a class="nav-link  volver " routerLink="../../" routerLinkActive="router-link-active">
+      <fa-icon class="fa-2x mr-2" [icon]="faVolver"></fa-icon><strong>Volver</strong>
+    </a> 
+    <h3 class="titulo1 col-9 text-center pt-3">{{recurso.nombre | uppercase}}</h3>
+    <hr class="w-100 mt-0 mb-1" />
+  </div>
+  <div class="row  align-items-start mt-0 pt-0 ">
+        <!-- este boton se deberá mostrar solo si eres el gestor del recurso -->
+    <div class="col-3" *ngIf='isGestorRecurso'>
+      <button class="btn text-white" (click)='cambiaRol()'>Cambiar a Vista {{rol}}</button>
+    </div>    
+
+  </div>
+  <!--esta sera la vista del gestor-->
+  <form #recursoForm="ngForm" *ngIf='cambioBoton;else elseBlock'>
+    <div class="form-row py-2">
+      <div class="col-lg-3 col-md-12">
+        <label class="titulo"><b>NOMBRE<sup class="text-danger">*</sup></b></label>
+        <input type="text" class="form-control letra" [(ngModel)]="recurso.nombre" placeholder="Nombre del recurso"
+          name="nombre" required #nombre="ngModel" [ngClass]="{ 'is-invalid': nombre.invalid && (nombre.dirty || nombre.touched),
+          'is-valid': !nombre.invalid }" />
+        <div class="text-danger" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+          <div *ngIf="nombre.errors.required">
+            El nombre del recurso es obligatorio
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-12" *ngIf='recurso.categoria'>
+        <label class="titulo pr-2"><b>CATEGORÍA:</b></label><br>
+        <input type="text" class="form-control letra" name="categoria" [placeholder]='recurso.categoria.nombre' readonly />
+      </div>
+      <div class="col-lg-12 col-md-12 pt-3" *ngIf='recurso.tipoFormulario.codTipo == "11"'>
+        <label class="titulo"><b>DATOS ESPECÍFICOS DE LA SOLICITUD<sup class="text-danger">*</sup></b></label>
+        <textarea class="form-control letra" [(ngModel)]="recurso.datosEspecificosSolicitud" placeholder="Datos específicos de la solicitud del recurso"
+          name="datosEspecificosSolicitud" required #datosEspecificosSolicitud="ngModel" [ngClass]="{ 'is-invalid': datosEspecificosSolicitud.invalid && (datosEspecificosSolicitud.dirty || datosEspecificosSolicitud.touched),
+          'is-valid': !datosEspecificosSolicitud.invalid }" rows="5" cols="50"></textarea>
+        <div class="text-danger" *ngIf="datosEspecificosSolicitud.invalid && (datosEspecificosSolicitud.dirty || datosEspecificosSolicitud.touched)">
+          <div *ngIf="datosEspecificosSolicitud.errors.required">
+            La descripción del Recurso es obligatoria
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12 col-md-12 pt-3">
+        <label class="titulo"><b>DESCRIPCIÓN<sup class="text-danger">*</sup></b></label>
+        <textarea class="form-control letra" [(ngModel)]="recurso.descripcion" placeholder="Descripción del recurso"
+          name="descripcion" required #descripcion="ngModel" [ngClass]="{ 'is-invalid': descripcion.invalid && (descripcion.dirty || descripcion.touched),
+          'is-valid': !descripcion.invalid }" rows="5" cols="50"></textarea>
+        <div class="text-danger" *ngIf="descripcion.invalid && (descripcion.dirty || descripcion.touched)">
+          <div *ngIf="descripcion.errors.required">
+            La descripción del Recurso es obligatoria
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12 col-md-12 pt-3">
+        <label class="titulo"><b>OTROS<sup class="text-danger">*</sup></b></label>
+        <textarea class="form-control letra" [(ngModel)]="recurso.otros" placeholder="Otros datos de interés"
+          name="otros" #otros="ngModel" rows="5" cols="50"></textarea>
+      </div>
+      <div class="col-lg-12 col-md-12 pt-3">
+        <div class="row mt-2">
+          <div class="col-9 text-center">
+            <h3 class="bienvenido text-center titulo1"><u>FICHEROS</u> </h3>
+          </div>
+          <div class="col-3 text-right">
+            <button class="btn text-white" (click)='mostrarNuevoFichero()'>Nuevo Fichero</button>
+          </div>
+        </div>
+        <div class="card text-left mt-2" *ngIf='nuevoFichero'>
+          <img class="card-img-top" alt="">
+          <div class="card-body">
+            <form>
+              <div class="col-lg-3 col-md-12">
+                <label class="titulo"><b>NOMBRE<sup class="text-danger">*</sup></b></label>
+                <input type="text" class="form-control letra" [(ngModel)]="fichero.nombre"
+                  placeholder="Nombre del fichero" name="nombreFichero" required #nombreFichero="ngModel" [ngClass]="{ 'is-invalid': nombreFichero.invalid && (nombreFichero.dirty || nombreFichero.touched),
+                'is-valid': !nombreFichero.invalid }" />
+                <div class="text-danger"
+                  *ngIf="nombreFichero.invalid && (nombreFichero.dirty || nombreFichero.touched)">
+                  <div *ngIf="nombreFichero.errors.required">
+                    El nombre del fichero es obligatorio
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-12">
+                <label class="titulo pt-2"><b>CATEGORÍA DE FICHERO<sup class="text-danger">*</sup></b></label>
+                <select name="categoriaFichero" id="categoriaFichero" [(ngModel)]="fichero.categoriaFichero">
+                  <option class=" letra" *ngFor="let categoriaFichero of categoriasFichero"
+                    [ngValue]="categoriaFichero.url">{{ categoriaFichero.nombre }}</option>
+                </select>
+              </div>
+              <div class="col-lg-12 col-md-12 pt-3">
+                <label class="titulo"><b>DESCRIPCIÓN<sup class="text-danger">*</sup></b></label>
+                <textarea class="form-control letra" [(ngModel)]="fichero.descripcion"
+                  placeholder="Descripción del fichero" name="descripcionFichero" required #descripcionFichero="ngModel"
+                  [ngClass]="{ 'is-invalid': descripcionFichero.invalid && (descripcionFichero.dirty || descripcionFichero.touched),
+                'is-valid': !descripcionFichero.invalid }" rows="5" cols="50"></textarea>
+                <div class="text-danger"
+                  *ngIf="descripcionFichero.invalid && (descripcionFichero.dirty || descripcionFichero.touched)">
+                  <div *ngIf="descripcionFichero.errors.required">
+                    La descripción del Fichero es obligatoria
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 col-md-12 pt-3">
+                <label class="titulo"><b>ARCHIVO<sup class="text-danger mr-2">*</sup></b> (Tamaño máximo permitido: {{sizeMaxDocRecurso}} MB, salvo imagenes ({{sizeMaxEscudo}} MB))</label>
+                <input type="file" (change)="selectFile($event)" class="form-control" />
+              </div>
+            </form>
+            <div class="col-3 text-left pt-2">
+              <button class="btn text-white " (click)='crearFichero()'>Crear Fichero</button>
+            </div>
+          </div>
+        </div>
+        <!-- se listan los ficheros del recurso -->
+        <div class="row mt-2 titulos">
+          <div class="col-10 col-sm-10 col-md-4 col-lg-4 col-xl-4 titulo"><b>NOMBRE</b></div>
+          <div class="col-10 col-sm-10 col-md-3 col-lg-3 col-xl-3 titulo"><b>CATEGORIA DE FICHERO</b></div>
+          <div class="col-10 col-sm-10 col-md-4 col-lg-4 col-xl-4 titulo"><b>DESCRIPCIÓN</b></div>
+          <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"></div>
+        </div>
+        <div *ngFor="let fichero of ficheros">
+          <app-fichero [fichero]="fichero" *ngIf='fichero' (ficheroSeleccionado)='verDatosFichero($event)' (ficheroEliminar)='onEliminarFichero($event)'></app-fichero>
+        </div>
+      </div>
+    </div>
+    <div class="form-row justify-content-between pt-3">
+      <div class="col-lg-5 col-md-12 mb-4">
+        <button class="btn text-white" role="button" (click)="actualizar()" [disabled]="!recursoForm.form.valid">
+          Guardar
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+<!--esta sera la vista del usuario normal-->
+<ng-template #elseBlock>
+  <div class="titulo">
+    <h4 class="text-center"><b>DESCRIPCIÓN</b></h4>
+    <hr>
+    <p class="texto">{{recurso.descripcion}}</p>
+  </div>
+  <!-- este div recorrera cada categoria de fichero de las q si tiene el recurso, que son imagenes, y solo esas -->
+  <div class="titulo" *ngFor='let categoriaFichero of categoriasFicheroImagenes(categoriasFicheroDeRecurso)'> <h4 class="text-center"><b>{{categoriaFichero.nombre | uppercase}}</b></h4>
+    <!-- este div recorrera cada fichero de esa categoria de fichero, -->
+    <hr>
+    <a  (click)='show(imagen)' *ngFor='let imagen of filtrarPorCategoriaFichero(ficheros, categoriaFichero)'>
+      <figure class="pr-4 pt-2 pb-3">
+        <img class="" [src]='pathArchivo(imagen.nombreArchivo)' width="350" [alt]='imagen.nombre' />
+        <figcaption class="text-center pt-2">{{imagen.nombre | titlecase}}</figcaption>
+      </figure> 
+    </a>
+  </div>
+  <!-- este div recorrera cada categoria de fichero de las q si tiene el recurso, que no son imagenes, y solo esas -->
+  <div class="titulo pt-3 " *ngFor='let categoriaFichero of categoriasFicheroHref(categoriasFicheroDeRecurso)'> <h4 class="text-center"><b>{{categoriaFichero.nombre | uppercase}}</b></h4>
+  <hr>
+    <!-- este div recorrera cada fichero de esa categoria de fichero, -->
+    <a *ngFor='let fichero of filtrarPorCategoriaFichero(ficheros, categoriaFichero)' [href]="pathArchivo(fichero.nombreArchivo)">
+        <li class="texto href ml-3">{{fichero.nombre}}</li>
+    </a>
+  </div>
+  <div class="titulo">
+    <h4 class="text-center"><b>CALENDARIO</b></h4>
+    <hr>
+    <a href="assets/calendario.pdf">
+      <p class="texto href">Calendario del recurso {{recurso.nombre}}</p>
+  </a>  </div>
+  <div class="titulo">
+    <h4 class="text-center"><b>OTROS</b></h4>
+    <hr>
+    <p class="texto">{{recurso.otros}}</p>
+  </div>
+  <div class="titulo" *ngIf='recurso.conDatosEspecificosSolicitud'>
+    <h4 class="text-center"><b>DATOS ESPECÍFICOS DE LA SOLICITUD</b></h4>
+    <hr>
+    <textarea class="texto"  rows="6" cols="60"  readonly>{{recurso.datosEspecificosSolicitud}}</textarea>
+  </div>
+</ng-template>
+<!-- modal de las imagenes -->
+<div *ngIf='showModal' [style.display]="showModal ? 'block' : 'none'"   class="modal" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog"  role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">{{imagenModal.nombre | titlecase}}</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <figure>
+          <img 
+            class="pr-2 pt-2 inline img-fluid" [src]='pathArchivo(imagenModal.nombreArchivo)' 
+            [alt]='imagenModal.nombre' />
+          <figcaption class="text-center pt-2">{{imagenModal.descripcion}}</figcaption>
+        </figure>   
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn text-white" data-dismiss="modal" (click)="hide()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal fichero-->
+<div class="modal fade" id="modalFichero" tabindex="-1" role="dialog" aria-labelledby="datosFichero" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="datosFichero">
+          <b>Datos Completos del Fichero</b>
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-fichero-ficha *ngIf="ficheroVerDatos" [fichero]="ficheroVerDatos"
+          (ficheroEditar)="onFicheroEditar($event)"></app-fichero-ficha>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn text-white" data-dismiss="modal" (click)="ngOnInit()">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

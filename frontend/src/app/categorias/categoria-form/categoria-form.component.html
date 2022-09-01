@@ -1,0 +1,50 @@
+<!-- muestra el formulario para crear una nueva categoria -->
+<div class="container-fluid">
+  <div class="row ml-4 pl-3 mb-0 pb-0">
+    <a class="nav-link text-center volver pb-0 mb-0" routerLink="../../"  routerLinkActive="router-link-active">
+      <fa-icon class="fa-2x mr-2" [icon]="faVolver"></fa-icon><strong>Volver</strong></a>
+  </div>
+  <div class="row justify-content-center">
+    <h3 class="mt-0 pt-0">CREAR Categoría</h3>
+    <hr class="w-100 mt-0 pt-0" />
+  </div>
+  <form #categoriaForm="ngForm">
+    <div class="form-row py-2">
+      <div class="col-lg-4 col-md-12">
+        <label class="titulo"><b>CATEGORÍA<sup class="text-danger">*</sup></b></label>
+        <input type="text" class="form-control letra" [(ngModel)]="categoria.nombre" placeholder="Nombre de la categoría"
+          name="nombre" required #nombre="ngModel" [ngClass]="{ 'is-invalid': nombre.invalid && (nombre.dirty || nombre.touched),
+        'is-valid': !nombre.invalid }" />
+        <div class="text-danger" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+          <div *ngIf="nombre.errors.required">
+            El nombre de la categoría es obligatorio
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-12">
+        <label class="titulo"><b>CATEGORÍA PADRE<sup class="text-danger">*</sup></b></label>
+        <select name="categoriaPadre" id="categoriaPadre" [(ngModel)]="categoria.categoriaPadre">
+          <option class=" letra" *ngFor="let categoria of categorias" [ngValue]="categoria.url">{{ categoria.nombre }}</option>
+        </select>
+      </div>
+      <div class="col-lg-4 col-md-12">
+        <label class="titulo"><b>DESCRIPCIÓN<sup class="text-danger">*</sup></b></label>
+        <textarea class="form-control letra" [(ngModel)]="categoria.descripcion" placeholder="Descripción de la Categoría"
+          name="descripcion" required #descripcion="ngModel" [ngClass]="{ 'is-invalid': descripcion.invalid && (descripcion.dirty || descripcion.touched),
+        'is-valid': !descripcion.invalid }" rows="5" cols="50"></textarea>
+        <div class="text-danger" *ngIf="descripcion.invalid && (descripcion.dirty || descripcion.touched)">
+          <div *ngIf="descripcion.errors.required">
+            La descripción de la Categoría es obligatoria
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-row justify-content-between pt-3">
+      <div class="col-lg-5 col-md-12 mb-4">
+        <button class="btn text-white" role="button" (click)="crearCategoria()" [disabled]="!categoriaForm.form.valid">
+          Crear Categoría
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

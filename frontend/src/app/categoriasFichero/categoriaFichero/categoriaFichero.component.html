@@ -1,0 +1,8 @@
+<!-- muestra en una linea cada categoria de fichero, y con un modal se ven/editan sus datos -->
+<hr class='w-100'>
+<div class="row">
+  <div class="col-10 col-sm-10 col-md-3 col-lg-3 col-xl-3"><a class="" data-toggle="modal"
+    data-target="#modalCategoriaFichero" (click)='categoriaFicheroSeleccionada.emit(categoriaFichero)'><fa-icon [icon]="faEdit" class="mr-2"></fa-icon>{{categoriaFichero.nombre | uppercase}}</a></div>
+  <div class="col-10 col-sm-10 col-md-3 col-lg-3 col-xl-3 text-center">{{categoriaFichero.tipo}}</div>
+  <div class="col-10 col-sm-10 col-md-6 col-lg-6 col-xl-6"> {{categoriaFichero.descripcion | titlecase}}</div>
+</div>

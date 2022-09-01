@@ -1,0 +1,129 @@
+<!-- posibilita que en cualquier subpantalla de un cenad se pueda acceder a su menu -->
+<div class="container-fluid mb-0 pb-0">
+  <div class="row titulo mt-1">
+    <div class="col col-md-1">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContenido"
+        aria-controls="navbarContenido" aria-expanded="false" aria-label="Toggle navigation">
+        <fa-icon class="fa-2x menu" [icon]="faMenu"></fa-icon>
+      </button>
+    </div>
+    <div class="col col-md-10">
+      <h1>{{ this.nombreCenad | uppercase }}</h1>
+    </div>
+  </div>
+  <!-- [ngClass]= "{'disabled': !isAutenticado}" -->
+  <div class="row">
+    <div class="col col-md-12 menu">
+      <nav class="navbar navbar-expand-lg collapse navbar-collapse mt-0 pt-0 pt-0 pb-0" id="navbarContenido">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link home" routerLink="/" routerLinkActive="router-link-active">
+              <fa-icon class="fa-2x" [icon]="faHome"></fa-icon>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link homePrincipal" (click)='inicioCenad()'>
+              CENAD/CMT</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <fa-icon class='mr-2' [icon]="faConsultar"></fa-icon>Consultar
+            </a>
+            <div class="dropdown-menu consultar" aria-labelledby="navbarDropdownMenuLink">
+              <a class="nav-link" [routerLink]="['consultaRecursos', idCenad]" routerLinkActive="router-link-active">
+                <fa-icon class='mr-2' [icon]="faRecurso"></fa-icon>Recurso
+              </a>
+              <a class="nav-link" [hidden]="isSuperAdmin" [routerLink]="['calendarios', idCenad]"
+                routerLinkActive="router-link-active">
+                <fa-icon class='mr-2' [icon]="faCalendario"></fa-icon>Calendario
+              </a>
+              <a class="nav-link" [routerLink]="['cartografias', idCenad]" routerLinkActive="router-link-active">
+                <fa-icon class='mr-2' [icon]="faCartografia"></fa-icon>Cartografía
+              </a>
+              <a class="nav-link" href="https://www.tiempo.com" target="_blank" [hidden]="isCenadZaragoza">
+                <fa-icon class='mr-2' [icon]="faMeteo"></fa-icon>Meteorología
+              </a>
+              <a class="nav-link" href="http://srvgregwww02/GESNOEX" target="_blank">
+                <fa-icon class='mr-2' [icon]="faArtefacto"></fa-icon>Artefactos No Explosionados
+              </a>
+              <a class="nav-link" href="https://10.63.172.26/so/#/login" target="_blank" [hidden]="!isCenadZaragoza">
+                <fa-icon class='mr-2' [icon]="faVista"></fa-icon>Vistas ACMT
+              </a>
+          <li class="nav-item dropdown-submenu" [hidden]="!isCenadZaragoza">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarSubmenu" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              <fa-icon class='mr-2' [icon]="faMeteo"></fa-icon> Meteorología
+            </a>
+            <div class="dropdown-menu submenu" aria-labelledby="navbarSubmenu">
+              <a class="nav-link" href="https://www.tiempo.com/san-gregorio.htm" target="_blank">
+                <fa-icon class='mr-2' [icon]="faPrevision"></fa-icon>Previsión
+              </a>
+              <a class="nav-link" title="CENAD-SG_Calculador-de-IPI" href="assets/CENAD-SG_Calculador-de-IPI.xlsx" target="_blank">
+                <fa-icon class='mr-2' [icon]="faIPI"></fa-icon>IPI
+              </a>
+              <a class="nav-link" href="http://10.63.172.49/map" target="_blank">
+                <fa-icon class='mr-2' [icon]="faMetozonas"></fa-icon>Datos por Zonas
+              </a>
+            </div>
+          </li>
+    </div>
+    </li>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        <fa-icon class='mr-2' [icon]="faMas"></fa-icon>Otros
+      </a>
+      <div class="dropdown-menu otros" aria-labelledby="navbarDropdownMenuLink">
+        <a class="nav-link" [routerLink]="['infoCenad', idCenad]" routerLinkActive="router-link-active">
+          <fa-icon class='mr-2' [icon]="faInfo"></fa-icon>Información
+        </a>
+        <a class="nav-link" [routerLink]="['normativas', idCenad]" routerLinkActive="router-link-active">
+          <fa-icon class='mr-2' [icon]="faNormativa"></fa-icon>Normativa
+        </a>
+      </div>
+    </li>
+    <li class="nav-item" *ngIf="isGestorNormal">
+      <a class="nav-link" [routerLink]="['solicitudesRecursos', idCenad]" routerLinkActive="router-link-active">
+        <fa-icon class='mr-2' [icon]="faSolicitar"></fa-icon>Solicitudes
+      </a>
+    </li>
+    <li class="nav-item" *ngIf="isAdminEsteCenad">
+      <a class="nav-link" [routerLink]="['calendarios', idCenad]" routerLinkActive="router-link-active">
+        <fa-icon class='mr-2' [icon]="faSolicitar"></fa-icon>Solicitudes
+      </a>
+    </li>
+    <li class="nav-item dropdown" [hidden]="!isAdminEsteCenad">
+      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        <fa-icon class='mr-2' [icon]="faUser"></fa-icon>Gestionar
+      </a>
+      <div class="dropdown-menu gestionar" aria-labelledby="navbarDropdownMenuLink">
+        <a class="dropdown-item" [routerLink]="['cartografias', idCenad]" routerLinkActive="router-link-active">
+          <fa-icon class='mr-2' [icon]="faCartografia"></fa-icon>Cartografía
+        </a>
+        <a class="dropdown-item" [routerLink]="['recursos', idCenad]" routerLinkActive="router-link-active">
+          <fa-icon class='mr-2' [icon]="faRecurso"></fa-icon>Recursos
+        </a>
+        <a class="dropdown-item" [routerLink]="['categorias', idCenad]" routerLinkActive="router-link-active">
+          <fa-icon class='mr-2' [icon]="faCategorias"></fa-icon>Categorías
+        </a>
+        <a class="dropdown-item" [routerLink]="['usuarios', idCenad]" routerLinkActive="router-link-active">
+          <fa-icon class='mr-2' [icon]="faUsuarios"></fa-icon>Usuarios
+        </a>
+        <a class="dropdown-item" [routerLink]="['unidades', idCenad]" routerLinkActive="router-link-active">
+          <fa-icon class='mr-2' [icon]="faUnidades"></fa-icon>Unidades
+        </a>
+        <a class="dropdown-item" [routerLink]="['normativas', idCenad]" routerLinkActive="router-link-active">
+          <fa-icon class='mr-2' [icon]="faNormativa"></fa-icon>Normativa
+        </a>
+        <a class="dropdown-item" [routerLink]="['infoCenad', idCenad]" routerLinkActive="router-link-active">
+          <fa-icon class='mr-2' [icon]="faInfo"></fa-icon>Información
+        </a>
+      </div>
+    </li>
+    </ul>
+    </nav>
+  </div>
+</div>
+</div>

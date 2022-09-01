@@ -1,0 +1,70 @@
+<!-- muestra el formulario para crear una nueva cartografia -->
+<div class="container-fluid">
+  <div class="row ml-4 pl-3 mb-0 pb-0">
+    <a class="nav-link text-center volver pb-0 mb-0" routerLink="../../"  routerLinkActive="router-link-active">
+      <fa-icon class="fa-2x mr-2" [icon]="faVolver"></fa-icon><strong>Volver</strong></a>
+  </div>
+  <div class="row justify-content-center">
+    <h3 class="mt-0 pt-0">CREAR CARTOGRAFÍA</h3>
+    <hr class="w-100 mt-0 pt-0" />
+  </div>
+  <form #cartografiaForm="ngForm">
+    <div class="form-row py-2">
+      <div class="col-lg-4 col-md-12">
+        <label class="titulo"><b>NOMBRE<sup class="text-danger">*</sup></b></label>
+        <input type="text" class="form-control letra" [(ngModel)]="cartografia.nombre" placeholder="Nombre de la cartografia"
+          name="nombre" required #nombre="ngModel" [ngClass]="{ 'is-invalid': nombre.invalid && (nombre.dirty || nombre.touched),
+        'is-valid': !nombre.invalid }" />
+        <div class="text-danger" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+          <div *ngIf="nombre.errors.required">
+            El nombre de la cartografia es obligatorio
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-12">
+        <label class="titulo"><b>ESCALA<sup class="text-danger">*</sup></b></label>
+        <input type="text" class="form-control letra" [(ngModel)]="cartografia.escala" placeholder="Escala de la cartografia"
+          name="escala" required #escala="ngModel" [ngClass]="{ 'is-invalid': escala.invalid && (escala.dirty || escala.touched),
+        'is-valid': !escala.invalid }" />
+        <div class="text-danger" *ngIf="escala.invalid && (escala.dirty || escala.touched)">
+          <div *ngIf="escala.errors.required">
+            La escala de la cartografia es obligatorio
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-12">
+        <label class="titulo"><b>SISTEMA DE REFERENCIA<sup class="text-danger">*</sup></b></label>
+        <input type="text" class="form-control letra" [(ngModel)]="cartografia.sistemaReferencia" placeholder="Sistema de referencia de la cartografia"
+          name="sistemaReferencia" required #sistemaReferencia="ngModel" [ngClass]="{ 'is-invalid': sistemaReferencia.invalid && (escala.dirty || sistemaReferencia.touched),
+        'is-valid': !sistemaReferencia.invalid }" />
+        <div class="text-danger" *ngIf="sistemaReferencia.invalid && (sistemaReferencia.dirty || sistemaReferencia.touched)">
+          <div *ngIf="sistemaReferencia.errors.required">
+            El sistema de referencia de la cartografia es obligatorio
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-12">
+        <label class="titulo"><b>DESCRIPCIÓN<sup class="text-danger">*</sup></b></label>
+        <textarea class="form-control letra" [(ngModel)]="cartografia.descripcion" placeholder="Descripción de la cartografia"
+          name="descripcion" required #descripcion="ngModel" [ngClass]="{ 'is-invalid': descripcion.invalid && (descripcion.dirty || descripcion.touched),
+        'is-valid': !descripcion.invalid }" rows="5" cols="50"></textarea>
+        <div class="text-danger" *ngIf="descripcion.invalid && (descripcion.dirty || descripcion.touched)">
+          <div *ngIf="descripcion.errors.required">
+            La descripción de la cartografia es obligatoria
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12 pt-3">
+        <label class="titulo"><b>ARCHIVO<sup class="text-danger mr-2">*</sup></b> (Tamaño máximo permitido: {{sizeMaxCartografia}} GB)</label>
+        <input type="file" (change)="selectFile($event)" class="form-control"/>
+      </div>
+    </div>
+    <div class="form-row justify-content-between pt-3">
+      <div class="col-lg-5 col-md-12 mb-4">
+        <button class="btn text-white" role="button" (click)="crearCartografia()" [disabled]="!cartografiaForm.form.valid">
+          Crear Cartografía
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,44 @@
+<!-- muestra la tabla de las categorias de fichero -->
+<div class="container-fluid">
+  <div class="row ml-4 mb-0 pl-3">
+    <a class="nav-link text-center volver" routerLink="/superadministrador" routerLinkActive="router-link-active">
+      <fa-icon class="fa-2x mr-2" [icon]="faVolver"></fa-icon><strong>Volver</strong></a>
+  </div>
+  <div class="row mt-4">
+    <div class="col-9 text-center">
+      <h3 class="text-center titulo1"><u>GESTIÓN DE CATEGORÍAS DE FICHEROS</u> </h3>
+    </div>
+    <div class="col-3 justify-content-end">
+      <button class="btn text-white" routerLink="/categoriasFichero/formulario">Nueva Categoría de Fichero</button>
+    </div>
+  </div>
+  <hr class='w-100'>
+  <div class="row">
+    <div class="col-10 col-sm-10 col-md-3 col-lg-3 col-xl-3 titulo"><b>NOMBRE</b></div>
+    <div class="col-10 col-sm-10 col-md-3 col-lg-3 col-xl-3 titulo text-center"><b>TIPO</b></div>
+    <div class="col-10 col-sm-10 col-md-6 col-lg-6 col-xl-6 titulo"><b>DESCRIPCIÓN</b></div>
+  </div>
+  <div *ngFor="let categoriaFichero of categoriasFichero">
+    <app-categoriaFichero [categoriaFichero]="categoriaFichero" (categoriaFicheroSeleccionada)="verDatos($event)"></app-categoriaFichero>
+  </div>
+  <!-- Modal categoriaFichero-->
+  <div class="modal fade" id="modalCategoriaFichero" tabindex="-1" role="dialog" aria-labelledby="datosCategoriaFichero" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="datosCategoriaFichero"><b>Datos Completos de la Categoría de Fichero</b> </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <app-categoriaFichero-ficha *ngIf='categoriaFicheroVerDatos' [categoriaFichero]='categoriaFicheroVerDatos' (categoriaFicheroEliminar)='onCategoriaFicheroEliminar($event)'
+            (categoriaFicheroEditar)='onCategoriaFicheroEditar($event)'></app-categoriaFichero-ficha>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn text-white" data-dismiss="modal" (click)="ngOnInit()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

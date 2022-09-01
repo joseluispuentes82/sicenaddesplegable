@@ -1,0 +1,153 @@
+<!-- Componente que muestra el CALENDARIO de asignación de un recurso de un Cenad/CMT -->
+<div class="container">
+  <div class="row mb-2 mt-2 pb-1 Planificadas">
+    <div class="col-12 app-sidebar">
+      <div class='app-sidebar-section titulos'>
+        <h5 class="text-center titulo-planificadas">PLANIFICADAS</h5>
+      </div>
+      <div class="row justify-content-end mr-5">
+        <button class="btn nueva-solicitud p-1" [hidden]="!isSuperAdmin"
+          [routerLink]="['formulario', idCenad, idSolicitud]">Nueva Planificación</button>
+      </div>
+      <div class="row ml-4 mr-4 mb-2 mt-0 justify-content-between">
+        <div class="col-lg-3 col-md-12 ml-2">
+          <label>
+            <input type='checkbox' [checked]='calendarPlanVisible' (change)='mostrarCalendarioPlan()' />
+            Mostrar calendario
+          </label>
+        </div>
+        <div class="col-lg-3 col-md-12 ml-2">
+          <label class="mr-5">Categoría: <sup class="text-danger mr-3">*</sup></label>
+          <select name="categoriasFiltradasCal" id="categoriasFiltradasCal" class="form-control form-control-sm"
+            [(ngModel)]="categoriaSeleccionadaPlan" (change)="filtrar('Planificadas')">
+            <option *ngFor="let categoria of categoriasCenad" [ngValue]="categoria">{{ categoria.nombre | uppercase}}
+            </option>
+          </select>
+          <button class="btn-filtros mt-2 ml-1" *ngIf='categoriaSeleccionadaPlan'
+            (click)="borrarFiltros('Planificadas')">Borrar Filtros
+            Categoria</button>
+        </div>
+        <div class="col-lg-3 col-md-12 ml-2">
+          <label>Recurso: <sup class="text-danger mr-2">*</sup></label>
+          <select name="recursosFiltradosCal" id="recursosFiltradosCal" class="form-control form-control-sm"
+            [(ngModel)]="idRecursoSeleccionadoPlan" required (change)="filtrarCalendario('Planificada')">
+            <option *ngFor="let recurso of recursosDeCategoriaPlan" [value]="recurso.idRecurso">{{ recurso.nombre |
+              uppercase}}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <hr class='w-100 titulo-planificadas'>
+    </div>
+    <div class="col-12 app">
+      <div class='app-main' *ngIf="calendarPlanVisible">
+        <full-calendar *ngIf="solicitudesCenadCalendarioPlanificadas.length != 0 ; else NoExistenPlan"
+          [options]='calendarOptionsPlanificadas'>
+        </full-calendar>
+      </div>
+      <ng-template #NoExistenPlan>
+        <div class="row justify-content-center">
+          <h6 class="no-existen">NO EXISTE PLANIFICACION</h6>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <div class="row mb-2 mt-2 pb-1 Solicitadas-Validadas" *ngIf="!isSuperAdmin">
+    <div class="col-12 app-sidebar justify-content-between">
+      <div class='app-sidebar-section titulos' *ngIf="isSolicitada && isAutenticado">
+        <h5 class="text-center titulo-solicitadas">SOLICITADAS<label class="ml-5 pl-5 ver-todas" (click)="verTodas()">
+            <fa-icon [icon]="faVista" class="ml-5 pl-5 mr-2"></fa-icon>Ver Lista
+          </label></h5>
+      </div>
+      <div class='app-sidebar-section titulos' *ngIf="isValidada">
+        <h5 class="text-center titulo-validadas">VALIDADAS<label [hidden]="!isAutenticado" class="ml-5 pl-5 ver-todas"
+            (click)="verTodas()">
+            <fa-icon [icon]="faVista" class="ml-5 pl-5 mr-2"></fa-icon>Ver Lista
+          </label></h5>
+      </div>
+      <div class='app-sidebar-section titulos' *ngIf="todasVisible && isAutenticado">
+        <h5 class="text-center titulo-solicitadas-validadas">SOLICITADAS-VALIDADAS<label class="ml-5 pl-5 ver-todas"
+            (click)="verTodasSolPla()">
+            <fa-icon [icon]="faVista" class="ml-5 pl-5 mr-2"></fa-icon>Ver Lista Todas
+          </label></h5>
+      </div>
+      <div class="row justify-content-end mr-5">
+        <button class="btn nueva-solicitud p-1 mb-1" [hidden]="!isAdministrador"
+          [routerLink]="['formulario', idCenad, idSolicitud]">Nuevo AVISO - Incidencia</button>
+      </div>
+      <div class="row ml-4 mr-4 mb-2 mt-0 justify-content-between">
+        <div class="custom-control custom-radio" *ngIf="isAutenticado && !isSuperAdmin">
+          <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input" [checked]="isSolicitada"
+            (change)="cambiarEstado('Solicitada')">
+          <label class="custom-control-label" for="customRadio1">Solicitadas</label>
+        </div>
+        <div class="custom-control custom-radio" *ngIf="isAutenticado && !isSuperAdmin">
+          <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input" [checked]="isValidada"
+            (change)="cambiarEstado('Validada')">
+          <label class="custom-control-label" for="customRadio2">Validadas</label>
+        </div>
+        <label [hidden]="!isAutenticado || isSuperAdmin">
+          <input type='checkbox' [checked]='todasVisible' (change)='mostrarTodas()' />
+          Mostrar Todas
+        </label>
+        <label>
+          <input type='checkbox' [checked]='calendarVisible' (change)='mostrarCalendario()' />
+          Mostrar calendario
+        </label>
+        <div class="col-lg-3 col-md-12 ml-2">
+          <label class="mr-5">Categoría: <sup class="text-danger mr-3">*</sup></label>
+          <select name="categoriasFiltradasCal" id="categoriasFiltradasCal" class="form-control form-control-sm"
+            [(ngModel)]="categoriaSeleccionada" (change)="filtrar('Solicitadas-Validadas')">
+            <option *ngFor="let categoria of categoriasCenad" [ngValue]="categoria">{{ categoria.nombre | uppercase}}
+            </option>
+          </select>
+          <button class="btn-filtros mt-2 ml-1" *ngIf='categoriaSeleccionada'
+            (click)="borrarFiltros('Solicitadas-Validadas')">Borrar Filtros
+            Categoria</button>
+        </div>
+        <div class="col-lg-3 col-md-12 ml-2">
+          <label>Recurso: <sup class="text-danger mr-2">*</sup></label>
+          <select name="recursosFiltradosCal" id="recursosFiltradosCal" class="form-control form-control-sm"
+            [(ngModel)]="idRecursoSeleccionado" required (change)="filtrarCalendario('Otro')">
+            <option *ngFor="let recurso of recursosDeCategoria" [value]="recurso.idRecurso">{{ recurso.nombre |
+              uppercase}}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="col-12" *ngIf="isAutenticado && !isSuperAdmin && isSolicitada">
+      <hr class='w-100 titulo-solicitadas'>
+    </div>
+    <div class="col-12" *ngIf="isValidada">
+      <hr class='w-100 titulo-validadas'>
+    </div>
+    <div class="col-12" *ngIf="todasVisible && isAutenticado">
+      <hr class='w-100 titulo-solicitadas-validadas'>
+    </div>
+    <div class="col-12 app">
+      <div class='app-main' *ngIf="isAutenticado && !isSuperAdmin && calendarVisible && isSolicitada">
+        <full-calendar *ngIf="solicitudesCenadCalendarioSolicitadas.length != 0; else NoExisten"
+          [options]='calendarOptionsSolicitadas'>
+        </full-calendar>
+      </div>
+      <div class='app-main' *ngIf="!isSuperAdmin && calendarVisible && isValidada">
+        <full-calendar *ngIf="solicitudesCenadCalendarioValidadas.length != 0; else NoExisten"
+          [options]='calendarOptionsValidadas'>
+        </full-calendar>
+      </div>
+      <div class='app-main' *ngIf="isAutenticado && !isSuperAdmin && calendarVisible && todasVisible">
+        <full-calendar *ngIf="solicitudesCenadCalendarioTodas.length != 0; else NoExisten"
+          [options]='calendarOptionsTodas'>
+        </full-calendar>
+      </div>
+      <ng-template #NoExisten>
+        <div class="row justify-content-center">
+          <h6 class="no-existen">NO EXISTEN</h6>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+<!-- muestra el modal con el formulario donde ver/editar el tipo de formulario -->
+<form #tipoFormularioForm="ngForm">
+  <div class="form-row py-2">
+    <div class="col-lg-4 col-md-12">
+      <label class="titulo"><b>NOMBRE<sup class="text-danger">*</sup></b></label>
+      <input type="text" class="form-control letra" [(ngModel)]="tipoFormulario.nombre" placeholder="Nombre del Tipo de Formulario"
+        name="nombre" required #nombre="ngModel" [ngClass]="{ 'is-invalid': nombre.invalid && (nombre.dirty || nombre.touched),
+      'is-valid': !nombre.invalid }" />
+      <div class="text-danger" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+        <div *ngIf="nombre.errors.required">
+          El nombre del Tipo de Formulario es obligatorio
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-12">
+      <label class="titulo"><b>CÓDIGO DEL TIPO DE FORMULARIO<sup class="text-danger">*</sup></b></label>
+      <input type="text" class="form-control letra" [(ngModel)]="tipoFormulario.codTipo" placeholder="Código del Tipo de Formulario"
+        name="codTipo" required #codTipo="ngModel" [ngClass]="{ 'is-invalid': codTipo.invalid && (codTipo.dirty || codTipo.touched),
+      'is-valid': !codTipo.invalid }" />
+      <div class="text-danger" *ngIf="codTipo.invalid && (codTipo.dirty || codTipo.touched)">
+        <div *ngIf="codTipo.errors.required">
+          El código del Tipo de Formulario es obligatorio
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-12">
+      <label class="titulo"><b>DESCRIPCIÓN<sup class="text-danger">*</sup></b></label>
+      <textarea class="form-control letra" [(ngModel)]="tipoFormulario.descripcion" placeholder="Descripción del Tipo de Formulario"
+        name="descripcion" required #descripcion="ngModel" [ngClass]="{ 'is-invalid': descripcion.invalid && (descripcion.dirty || descripcion.touched),
+      'is-valid': !descripcion.invalid }" rows="5" cols="50"></textarea>
+      <div class="text-danger" *ngIf="descripcion.invalid && (descripcion.dirty || descripcion.touched)">
+        <div *ngIf="descripcion.errors.required">
+          La descripción del Tipo de Formulario es obligatoria
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-row justify-content-between pt-5">
+    <button type="button" class="btn guardar" (click)="editar()" [disabled]="!tipoFormularioForm.form.valid">Guardar</button>
+    <button type="button" class="btn eliminar" (click)="eliminar()">Eliminar</button>
+  </div>
+</form>

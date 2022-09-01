@@ -1,0 +1,17 @@
+<!-- muestra en una linea cada normativa, y con un modal se ven/editan sus datos -->
+<hr class='w-100'>
+<div class="row">
+  <div class="col-10 col-sm-10 col-md-5 col-lg-5 col-xl-5" *ngIf='isAdminCenad; else noAdminCenad'><a class="" data-toggle="modal"
+      data-target="#modalNormativa" (click)='normativaSeleccionada.emit(normativa)'>
+      <fa-icon [icon]="faEdit" class="mr-2"></fa-icon>
+    </a>{{nombreMostrado | uppercase}}</div>
+  <div class="col-10 col-sm-10 col-md-6 col-lg-6 col-xl-6"> {{descripcionMostrada | titlecase}}</div>
+  <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1">
+    <a class='href' [href]="pathArchivo(normativa.nombreArchivo)">
+      <fa-icon [icon]="faDownload" class="mr-3"></fa-icon>
+    </a>
+  </div>
+</div>
+<ng-template #noAdminCenad>
+  <div class="col-10 col-sm-10 col-md-5 col-lg-5 col-xl-5">{{nombreMostrado | uppercase}}</div>
+</ng-template>

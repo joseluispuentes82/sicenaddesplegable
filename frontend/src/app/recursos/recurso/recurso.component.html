@@ -1,0 +1,12 @@
+<!-- muestra un recurso en una fila, con un modal al hacer click en el nombre, para ver/editar -->
+<hr class='w-100'>
+<div class="row">
+  <div class="col-10 col-sm-10 col-md-3 col-lg-3 col-xl-3" *ngIf='recurso'><a class="" data-toggle="modal"
+    data-target="#modalRecurso" (click)='recursoSeleccionado.emit(recurso)'><fa-icon [icon]="faEdit" class="mr-2"></fa-icon>{{recurso.nombre | uppercase}}</a></div>
+  <div class="col-10 col-sm-10 col-md-3 col-lg-3 col-xl-3" *ngIf='recurso.categoria'>{{recurso.categoria.nombre | uppercase}}</div>
+  <div class="col-10 col-sm-10 col-md-3 col-lg-3 col-xl-3" *ngIf='recurso.tipoFormulario'>{{recurso.tipoFormulario.nombre | uppercase}}</div>
+  <div class="col-10 col-sm-10 col-md-3 col-lg-3 col-xl-3" *ngIf='recurso.usuarioGestor; else elseBlock'> {{recurso.usuarioGestor.nombre | titlecase}}</div>
+</div>
+<ng-template #elseBlock>
+  <div class="col-10 col-sm-10 col-md-3 col-lg-3 col-xl-3" >NO TIENE</div>
+</ng-template>

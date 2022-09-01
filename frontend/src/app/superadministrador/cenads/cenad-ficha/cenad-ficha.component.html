@@ -1,0 +1,82 @@
+<!-- muestra un formulario con los datos del cenad para ver/editar -->
+<form #cenadForm="ngForm" (mouseenter)="actualizarAdministrador()">
+  <div class="form-row py-2">
+    <div class="col-lg-4 col-md-12">
+      <label><b>CENAD/CMT<sup class="text-danger">*</sup></b></label>
+      <input type="text" class="form-control letra" [(ngModel)]="cenad.nombre" placeholder="Nombre del CENAD/CMT"
+        name="nombre" required #nombre="ngModel" [ngClass]="{ 'is-invalid': nombre.invalid && (nombre.dirty || nombre.touched),
+        'is-valid': !nombre.invalid }" />
+      <div class="text-danger" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+        <div *ngIf="nombre.errors.required">
+          El nombre del CENAD/CMT es obligatorio
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-12 ml-2">
+      <label><b>PROVINCIA<sup class="text-danger">*</sup></b></label>
+      <select name="provincia" id="provincia" [(ngModel)]="cenad.provincia">
+        <option class=" letra" *ngFor="let provincia of provincias" [ngValue]="provincia.idProvincia">{{ provincia.nombre }}</option>
+      </select>
+    </div>
+    <div class="col-lg-8 col-md-12 pt-3">
+      <label><b>ADMINISTRADOR<sup class="text-danger">*</sup></b></label>
+      <input type="text" class="form-control letra" [(ngModel)]="administrador"  name="usuarioAdministrador" readonly/>
+    </div>
+    <div class="col-lg-8 col-md-12 pt-3">
+      <label><b>DIRECCIÓN<sup class="text-danger">*</sup></b></label>
+      <input type="text" class="form-control letra" [(ngModel)]="cenad.direccion" placeholder="Dirección del CENAD/CMT"
+        name="direccion" required #direccion="ngModel" [ngClass]="{ 'is-invalid': direccion.invalid && (direccion.dirty || direccion.touched),
+        'is-valid': !direccion.invalid }" />
+      <div class="text-danger" *ngIf="direccion.invalid && (direccion.dirty || direccion.touched)">
+        <div *ngIf="direccion.errors.required">
+          La dirección del CENAD/CMT es obligatoria
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-12 pt-3">
+      <label><b>TELÉFONO<sup class="text-danger">*</sup></b></label>
+      <input type="tel" class="form-control letra" [(ngModel)]="cenad.tfno" placeholder="Teléfono de contacto del CENAD/CMT"
+        name="telefono" required minlength="7" maxlength="9" #telefono="ngModel" [ngClass]="{ 'is-invalid': telefono.invalid && (telefono.dirty || telefono.touched),
+        'is-valid': !telefono.invalid }" />
+      <div class="text-danger" *ngIf="telefono.invalid && (telefono.dirty || telefono.touched)">
+        <div *ngIf="telefono.errors.required">
+          El Teléfono del CENAD/CMT es obligatorio
+        </div>
+        <div *ngIf="telefono.errors.minlength || telefono.errors.maxlength">
+          El Teléfono debe tener 7-9 carácteres
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12 col-md-12 pt-3">
+      <label><b>DESCRIPCIÓN<sup class="text-danger">*</sup></b></label>
+      <textarea class="form-control letra" [(ngModel)]="cenad.descripcion" placeholder="Descripción del CENAD/CMT"
+        name="descripcion" required #descripcion="ngModel" [ngClass]="{ 'is-invalid': descripcion.invalid && (descripcion.dirty || descripcion.touched),
+        'is-valid': !descripcion.invalid }" rows="5" cols="50"></textarea>
+      <div class="text-danger" *ngIf="descripcion.invalid && (descripcion.dirty || descripcion.touched)">
+        <div *ngIf="descripcion.errors.required">
+          La descripción del CENAD/CMT es obligatoria
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6 col-md-12 pt-3">
+      <label><b>EMAIL</b></label>
+      <input type="email" class="form-control letra" [(ngModel)]="cenad.email" placeholder="Email de contacto del CENAD/CMT"
+        name="email" #email="ngModel" [ngClass]="{ 'is-invalid': email.invalid && (email.dirty || email.touched),
+        'is-valid': !email.invalid }" />
+      <div class="text-danger" *ngIf="email.invalid && (email.dirty || email.touched)">
+        <div *ngIf="email.errors.required">
+          El Email del CENAD/CMT es obligatorio
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-12 pt-3 ml-2">
+      <label class="titulo"><b>ESCUDO<sup class="text-danger ">*</sup></b><br> (Máximo: {{sizeMaxEscudo}} MB)</label>
+      <input type="text" class="form-control" [(ngModel)]="cenad.escudo" name="escudo" readonly/>
+      <input type="file" (change)="selectFile($event)" class="form-control"/>
+    </div>
+  </div>
+  <div class="form-row justify-content-between pt-5">
+    <button type="button" class="btn guardar" (click)="editar()" [disabled]="!cenadForm.form.valid">Guardar</button>
+    <button type="button" class="btn eliminar" (click)="eliminar()">Eliminar</button>
+  </div>
+</form>

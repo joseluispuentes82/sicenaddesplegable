@@ -1,0 +1,8 @@
+<!-- muestra un tipo de formulario en una fila, y haciendo click en el nombre muestra un modal para ver/editar -->
+<hr class='w-100'>
+<div class="row">
+  <div class="col-10 col-sm-10 col-md-3 col-lg-3 col-xl-3"><a class="" data-toggle="modal"
+    data-target="#modalTipoFormulario" (click)='tipoFormularioSeleccionado.emit(tipoFormulario)'><fa-icon [icon]="faEdit" class="mr-2"></fa-icon>{{tipoFormulario.nombre | uppercase}}</a></div>
+  <div class="col-10 col-sm-10 col-md-3 col-lg-3 col-xl-3 text-center">{{tipoFormulario.codTipo}}</div>
+  <div class="col-10 col-sm-10 col-md-6 col-lg-6 col-xl-6"> {{tipoFormulario.descripcion | titlecase}}</div>
+</div>

@@ -1,0 +1,58 @@
+<!-- muestra un formulario con los datos del fichero para ver/editar -->
+<form #ficheroForm="ngForm" (mouseenter)="actualizarNgModels()">
+  <div class="form-row py-2">
+    <div class="col-lg-4 col-md-12">
+      <label><b>NOMBRE<sup class="text-danger">*</sup></b></label>
+      <input type="text" class="form-control letra" [(ngModel)]="fichero.nombre" placeholder="Nombre del fichero"
+        name="nombre" required #nombre="ngModel" [ngClass]="{ 'is-invalid': nombre.invalid && (nombre.dirty || nombre.touched),
+        'is-valid': !nombre.invalid }" />
+      <div class="text-danger" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+        <div *ngIf="nombre.errors.required">
+          El nombre del fichero es obligatorio
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12 col-md-12 pt-3">
+      <label class="titulo mr-2"><b>CATEGORÍA DE FICHERO<sup class="text-danger">*</sup></b></label>
+      <select name="categoriaFichero" id="categoriaFichero" [(ngModel)]="categoriaFicheroSeleccionada">
+        <option class=" letra" *ngFor="let categoriaFichero of categoriasFichero" [ngValue]="categoriaFichero.url">{{
+          categoriaFichero.nombre }}</option>
+      </select>
+    </div>
+    <div class="col-lg-12 col-md-12 pt-3" hidden>
+      <label class="titulo"><b>SOLICITUD CENAD<sup class="text-danger">*</sup></b></label>
+      <select name="solicitudCenad" id="solicitudCenad" [(ngModel)]="solicitudCenadSeleccionado">
+        <option class=" letra" *ngFor="let solicitud of solicitudesCenad" [ngValue]="solicitud.url">{{ solicitud.nombre
+          }}</option>
+      </select>
+    </div>
+    <div class="col-lg-12 col-md-12 pt-3" hidden>
+      <label class="titulo"><b>SOLICITUD UNIDAD<sup class="text-danger">*</sup></b></label>
+      <select name="solicitudUnidad" id="solicitudUnidad" [(ngModel)]="solicitudUnidadSeleccionado">
+        <option class=" letra" *ngFor="let solicitud of solicitudesUnidad" [ngValue]="solicitud.url">{{ solicitud.nombre
+          }}</option>
+      </select>
+    </div>
+    <div class="col-lg-12 col-md-12 pt-3">
+      <label><b>DESCRIPCIÓN<sup class="text-danger">*</sup></b></label>
+      <textarea class="form-control letra" [(ngModel)]="fichero.descripcion" placeholder="Descripción del fichero"
+        name="descripcion" required #descripcion="ngModel" [ngClass]="{ 'is-invalid': descripcion.invalid && (descripcion.dirty || descripcion.touched),
+        'is-valid': !descripcion.invalid }" rows="5" cols="50"></textarea>
+      <div class="text-danger" *ngIf="descripcion.invalid && (descripcion.dirty || descripcion.touched)">
+        <div *ngIf="descripcion.errors.required">
+          La descripción del fichero es obligatoria
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-12 pt-3 ml-2">
+      <label class="titulo"><b>ARCHIVO<sup class="text-danger ">*</sup></b><br> (Tamaño máximo permitido:
+        {{sizeMaxDocSolicitud}} MB, salvo imagenes ({{sizeMaxEscudo}} MB))</label>
+      <input type="text" class="form-control" [(ngModel)]="fichero.nombreArchivo" name="archivo" readonly />
+      <input type="file" (change)="selectFile($event)" class="form-control" />
+    </div>
+  </div>
+  <div class="form-row justify-content-between pt-5">
+    <button type="button" class="btn guardar" (click)="editar()" data-dismiss="modal"
+      [disabled]="!ficheroForm.form.valid">Guardar</button>
+  </div>
+</form>

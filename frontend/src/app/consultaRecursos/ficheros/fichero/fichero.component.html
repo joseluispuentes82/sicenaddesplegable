@@ -1,0 +1,13 @@
+<!-- muestra cada fichero, pudiendo descargarlo al hacer click en el nombre -->
+<hr class='w-100'>
+<div class="row">
+  <div class="col-10 col-sm-10 col-md-4 col-lg-4 col-xl-4">
+    <a class="" data-toggle="modal"
+      data-target="#modalFichero" (click)='ficheroSeleccionado.emit(fichero)'><fa-icon [icon]="faEdit" class="mr-2"></fa-icon> {{nombreMostrado | uppercase}}</a>
+  </div>
+  <div class="col-10 col-sm-10 col-md-3 col-lg-3 col-xl-3" *ngIf='fichero.categoriaFichero'>{{fichero.categoriaFichero.nombre | uppercase}}</div>
+  <div class="col-10 col-sm-10 col-md-4 col-lg-4 col-xl-4"> {{descripcionMostrada | titlecase}}</div>
+  <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1"> 
+    <a class='href' [href]="pathArchivo(fichero.nombreArchivo)"><fa-icon [icon]="faDownload" class="mr-3"></fa-icon></a>
+    <a (click)='eliminar(fichero)'><fa-icon class="fa-1x" [icon]="faTrashAlt"></fa-icon></a></div>
+</div>

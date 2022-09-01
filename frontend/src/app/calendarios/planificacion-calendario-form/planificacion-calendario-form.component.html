@@ -1,0 +1,161 @@
+<!-- Componente FORMULARIO para edición y consulta de Solicitudes PLANIFICADAS y de Solicitudes de Avisos-Incidencias -->
+<div class="container-fluid">
+  <div class="row ml-4 pl-3 mb-3 mt-2 pb-0">
+    <div class="col-lg-2 col-md-12">
+      <a class="nav-link text-center volver" [routerLink]="['/principalCenad', idCenad, 'calendarios', idCenad]"
+        routerLinkActive="router-link-active">
+        <fa-icon class="fa-1x" [icon]="faVolver"></fa-icon>&nbsp;<strong>Volver Calendario</strong>
+      </a>
+    </div>
+    <div class="col-lg-5 col-md-12">
+      <h5 class="text-center">{{ nombreUser | uppercase }}</h5>
+    </div>
+    <div class="col-lg-3 col-md-12">
+      <h6 class="text-center">
+        <fa-icon class="fa-1x" [icon]="faEdit"></fa-icon>&nbsp;--Edición--
+      </h6>
+    </div>
+    <hr class='w-100'>
+  </div>
+  <form class="formulario" #solicitudForm="ngForm">
+    <div *ngIf="isSuperAdmin" class="form-row py-2 justify-content-center">
+      <h3><u>PLANIFICACION DE RECURSOS DE LOS CENAD/CMT</u></h3>
+    </div>
+    <div *ngIf="isAdministrador" class="form-row py-2 justify-content-center">
+      <h3><u>AVISOS - INCIDENCIAS (RECURSOS)</u></h3>
+    </div>
+    <div class="form-row py-2 justify-content-between">
+      <div class="col-lg-3 col-md-12 ml-2 mt-2" *ngIf="isSuperAdmin">
+        <label class="mr-2">Unidad: <sup class="text-danger">*</sup></label>
+        <select name="unidad" id="unidad" [(ngModel)]="unidadSeleccionada" required>
+          <option *ngFor="let unidad of unidades" [value]="unidad.nombre">{{ unidad.nombre | uppercase }}
+          </option>
+        </select>
+      </div>
+      <div class="col-lg-3 col-md-12 ml-2 mt-2" *ngIf="isAdministrador">
+        <label class="mr-2">CENAD/CMT: <sup class="text-danger">*</sup></label>
+        <input type="text" name="cenad" id="cenad" [(ngModel)]="nombreCenad" readonly>
+      </div>
+      <div class="col-lg-2 col-md-12 ml-2">
+        <label *ngIf="isSuperAdmin" for="validationServer02">Fecha Planificación: <sup
+            class="text-danger"></sup></label>
+        <label *ngIf="isAdministrador" for="validationServer02">Fecha Aviso-Incidencia: <sup
+            class="text-danger"></sup></label>
+        <input type="date" class="form-control" [(ngModel)]="fechaSolicitudParse" placeholder="dd-MM-yyyy" required
+          minlength="10" maxlength="10" name="fechaSol" #fechaSol="ngModel" [ngClass]="{
+                'is-invalid': fechaSol.invalid && (fechaSol.dirty || fechaSol.touched),
+                'is-valid': !fechaSol.invalid }" />
+        <div class="text-danger" *ngIf="fechaSol.invalid && (fechaSol.dirty || fechaSol.touched)">
+          <div *ngIf="fechaSol.errors.required">
+            La Fecha de la Solicitud es obligatoria
+          </div>
+          <div *ngIf="fechaSol.errors.minlength && fechaSol.errors.maxlength">
+            La fecha de la Solicitud debe tener 10 caracteres
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-1 col-md-12 ml-2 mr-2">
+        <label>Etiqueta: <sup class="text-danger">*</sup></label>
+        <input type="color" class="form-control" [(ngModel)]="solicitud.etiqueta" placeholder="Etiqueta calendario"
+          name="etiqueta" minlength="4" maxlength="10" #etiqueta="ngModel" [ngClass]="{
+                  'is-invalid': etiqueta.invalid && (etiqueta.dirty || etiqueta.touched),
+                  'is-valid': !etiqueta.invalid
+                }" />
+        <div class="text-danger" *ngIf="etiqueta.invalid && (etiqueta.dirty || etiqueta.touched)">
+          <div *ngIf="etiqueta.errors.required">
+            La Etiqueta de la Unidad es obligatoria
+          </div>
+          <div *ngIf="etiqueta.errors.minlength">
+            La Etiqueta de la Unidad debe tener al menos 4 caracteres
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row py-2 mt-2 justify-content-between">
+      <div class="col-lg-3 col-md-12 ml-2">
+        <label class="mr-5">Categoría: <sup class="text-danger mr-3">*</sup>{{ categoriaSeleccionada.nombre | uppercase
+          }}</label>
+        <select name="categoriasFiltradas" id="categoriasFiltradas" [(ngModel)]="categoriaSeleccionada"
+          (change)="filtrar()">
+          <option *ngFor="let categoria of categoriasCenad" [ngValue]="categoria">{{ categoria.nombre | uppercase}}
+          </option>
+        </select>
+        <button class="btn-filtros mt-2 ml-1" *ngIf='categoriaSeleccionada' (click)="borrarFiltros()">Borrar Filtros
+          Categoria</button>
+      </div>
+      <div class="col-lg-3 col-md-12 ml-2">
+        <label>Recurso: <sup class="text-danger mr-2">*</sup></label>
+        <select name="recursosFiltrados" id="recursosFiltrados" [(ngModel)]="uRlRecursoSeleccionado" required>
+          <option *ngFor="let recurso of recursosDeCategoria" [value]="recurso.url">{{ recurso.nombre | uppercase}}
+          </option>
+        </select>
+      </div>
+      <div class="col-lg-2 col-md-12 ml-2">
+        <label for="validationServer02">Fecha Inicio: <sup class="text-danger"></sup></label>
+        <input type="date" class="form-control" [(ngModel)]="fechaInicioParse" required name="fechaIni"
+          #fechaIni="ngModel" [ngClass]="{
+                'is-invalid': fechaIni.invalid && (fechaIni.dirty || fechaIni.touched),
+                'is-valid': !fechaIni.invalid
+              }" />
+        <div class="text-danger" *ngIf="fechaIni.invalid && (fechaIni.dirty || fechaIni.touched)">
+          <div *ngIf="fechaIni.errors.required">
+            La Fecha-Hora de Inicio es obligatoria
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-12 mr-2">
+        <label for="validationServer02">Fecha Fin: <sup class="text-danger"></sup></label>
+        <input type="date" class="form-control" [(ngModel)]="fechaFinParse" (change)="verificarFechas()"
+          placeholder="dd-MM-yyyy HH:mm:ss" required name="fechaFin" #fechaFin="ngModel" [ngClass]="{
+                'is-invalid': fechaFin.invalid && (fechaFin.dirty || fechaFin.touched),
+                'is-valid': !fechaFin.invalid }" />
+        <div class="text-danger" *ngIf="fechaFin.invalid && (fechaFin.dirty || fechaFin.touched)">
+          <div *ngIf="fechaFin.errors.required">
+            La Fecha-Hora de Fin es obligatoria
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-row py-2 mt-2 justify-content-center mr-3" *ngIf="isAdministrador">
+      <div class="col-lg-12 col-md-12 ml-2">
+        <label class="ml-2">Observaciones AVISO - INCIDENCIA: <sup class="text-danger">*</sup></label>
+        <input type="text" class="form-control ml-2" name="observacionesCenad" [readonly]="!isAdministrador"
+          [(ngModel)]="solicitud.observacionesCenad" placeholder="Observaciones del AVISO/INCIDENCIA" />
+      </div>
+    </div>
+    <!--  -->
+    <div class="form-row justify-content-center mt-5 pt-3 ml-2">
+      <div class="col-lg-5 col-md-12 mb-3" *ngIf="isSuperAdmin">
+        <button class="btn btn-primary" *ngIf="boton; else modificarSuperAdmin" role="button" (click)="create()"
+          [disabled]="!solicitudForm.form.valid">
+          Crear Planificación
+        </button>
+        <ng-template #modificarSuperAdmin>
+          <button class="btn btn-primary" role="button" (click)="actualizar()" [disabled]="!solicitudForm.form.valid">
+            Actualizar Planificación
+          </button>
+          <button class="btn btn-primary ml-5" role="button" (click)="borrarSolicitud()"
+            [disabled]="!solicitudForm.form.valid">
+            Borrar Planificación
+          </button>
+        </ng-template>
+      </div>
+      <div class="col-lg-5 col-md-12 mb-3" *ngIf="isAdministrador">
+        <button class="btn btn-primary" *ngIf="boton; else modificarAdministrador" role="button" (click)="create()"
+          [disabled]="!solicitudForm.form.valid">
+          Crear Aviso-Incidencia
+        </button>
+        <ng-template #modificarAdministrador>
+          <button class="btn btn-primary" role="button" (click)="actualizar()" [disabled]="!solicitudForm.form.valid">
+            Actualizar Aviso-Incidencia
+          </button>
+          <button class="btn btn-primary ml-5" role="button" (click)="borrarSolicitud()"
+            [disabled]="!solicitudForm.form.valid">
+            Borrar Aviso-Incidencia
+          </button>
+        </ng-template>
+      </div>
+    </div>
+  </form>
+</div>

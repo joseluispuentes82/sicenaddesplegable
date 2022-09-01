@@ -1,0 +1,61 @@
+<!-- muestra el modal con un formulario para ver/editar los datos del recurso -->
+<form #recursoForm="ngForm" (mouseenter)="actualizarNgModels()">
+  <div class="form-row py-2">
+    <div class="col-lg-6 col-md-12">
+      <label class="titulo"><b>NOMBRE<sup class="text-danger">*</sup></b></label>
+      <input type="text" class="form-control letra" [(ngModel)]="recurso.nombre" placeholder="Nombre del recurso" name="nombre"
+        required #nombre="ngModel" [ngClass]="{ 'is-invalid': nombre.invalid && (nombre.dirty || nombre.touched),
+        'is-valid': !nombre.invalid }"/>
+      <div class="text-danger" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+        <div *ngIf="nombre.errors.required">
+            El nombre del recurso es obligatorio
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12 col-md-12 pt-3" *ngIf="gestores.length != 0; else elseGestores">
+      <label class="titulo"><b>GESTOR<sup class="text-danger">*</sup></b></label>
+      <select name="usuarioGestor" id="usuarioGestor" [(ngModel)]="recursoUsuarioGestorSeleccionado">
+        <option class=" letra"  *ngFor="let gestor of gestores" [ngValue]="gestor.url">{{ gestor.nombre }}</option>
+      </select>
+    </div>
+    <ng-template #elseGestores>
+      <div class="col-lg-12 col-md-12 pt-3">
+        <label class="titulo"><b>GESTOR<sup class="text-danger">*</sup></b></label>
+        <label class="text-danger">NO EXISTEN</label>
+      </div>
+    </ng-template>
+    <!-- (ngModelchange)="cambiarCategoriaRecurso($event)" -->
+    <div class="col-lg-12 col-md-12 pt-3">
+      <label class="titulo"><b>CATEGORÍA<sup class="text-danger">*</sup></b></label>
+      <select name="categoria" id="categoria" [(ngModel)]="categoriaRecursoSeleccionada" >
+        <option class=" letra" *ngFor="let categoria of categorias" [ngValue]="categoria.url">{{ categoria.nombre }}</option>
+      </select>
+    </div>
+    <div class="col-lg-12 col-md-12 pt-3">
+      <label class="titulo"><b>TIPO DE FORMULARIO<sup class="text-danger">*</sup></b></label>
+      <select name="tipoFormulario" id="tipoFormulario" [(ngModel)]="tipoFormularioSeleccionado">
+        <option class=" letra" *ngFor="let tipoFormulario of tiposFormulario" [ngValue]="tipoFormulario.url">{{ tipoFormulario.nombre }}</option>
+      </select>
+    </div>
+    <div class="col-lg-12 col-md-12 pt-3">
+      <label class="titulo"><b>DESCRIPCIÓN<sup class="text-danger">*</sup></b></label>
+      <textarea class="form-control letra" [(ngModel)]="recurso.descripcion" placeholder="Descripción del recurso" name="descripcion"
+        required #descripcion="ngModel" [ngClass]="{ 'is-invalid': descripcion.invalid && (descripcion.dirty || descripcion.touched),
+        'is-valid': !descripcion.invalid }" rows="4" cols="50"></textarea>
+      <div class="text-danger" *ngIf="descripcion.invalid && (descripcion.dirty || descripcion.touched)">
+        <div *ngIf="descripcion.errors.required">
+            La descripción del Recurso es obligatoria
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12 col-md-12 pt-3">
+      <label class="titulo"><b>OTROS<sup class="text-danger">*</sup></b></label>
+      <textarea class="form-control letra" [(ngModel)]="recurso.otros" placeholder="Otros datos de interés" name="otros"
+        #otros="ngModel" rows="4" cols="50"></textarea>
+    </div>
+  </div>
+  <div class="form-row justify-content-between pt-5">
+    <button type="button" class="btn guardar" (click)="editar()" [disabled]="!recursoForm.form.valid">Guardar</button>
+    <button type="button" class="btn eliminar" (click)="eliminar()">Eliminar</button>
+  </div>
+</form>

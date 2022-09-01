@@ -1,0 +1,37 @@
+<!-- muestra el modal en el que se ven/editan los datos de una categoria -->
+<form #categoriaForm="ngForm" (mouseenter)="actualizarNgModels()">
+  <div class="form-row py-2">
+    <div class="col-lg-4 col-md-12">
+      <label class="titulo"><b>CATEGORÍA<sup class="text-danger">*</sup></b></label>
+      <input type="text" class="form-control letra" [(ngModel)]="categoria.nombre" placeholder="Nombre de la categoría" name="nombre"
+        required #nombre="ngModel" [ngClass]="{ 'is-invalid': nombre.invalid && (nombre.dirty || nombre.touched),
+        'is-valid': !nombre.invalid }"/>
+      <div class="text-danger" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+        <div *ngIf="nombre.errors.required">
+            El nombre de la categoría es obligatorio
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-8 col-md-12">
+      <label class="titulo"><b>CATEGORÍA PADRE<sup class="text-danger">*</sup></b></label>
+      <select name="categoriaPadre" id="categoriaPadre" [(ngModel)]="categoriaPadreSeleccionada" >
+        <option class=" letra" *ngFor="let categoria of categorias" [ngValue]="categoria.url">{{ categoria.nombre }}</option>
+      </select>
+    </div>
+    <div class="col-lg-12 col-md-12 pt-3">
+      <label class="titulo"><b>DESCRIPCIÓN<sup class="text-danger">*</sup></b></label>
+      <textarea class="form-control letra" [(ngModel)]="categoria.descripcion" placeholder="Descripción de la Categoría" name="descripcion"
+        required #descripcion="ngModel" [ngClass]="{ 'is-invalid': descripcion.invalid && (descripcion.dirty || descripcion.touched),
+        'is-valid': !descripcion.invalid }" rows="5" cols="50"></textarea>
+      <div class="text-danger" *ngIf="descripcion.invalid && (descripcion.dirty || descripcion.touched)">
+        <div *ngIf="descripcion.errors.required">
+            La descripción de la Categoría es obligatoria
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-row justify-content-between pt-5">
+    <button type="button" class="btn guardar" (click)="editar()" [disabled]="!categoriaForm.form.valid">Guardar</button>
+    <button type="button" class="btn eliminar" (click)="eliminar()">Eliminar</button>
+  </div>
+</form>

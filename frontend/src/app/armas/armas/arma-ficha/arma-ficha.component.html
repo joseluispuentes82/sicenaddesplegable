@@ -1,0 +1,26 @@
+<!-- muestra el modal con el formulario donde ver/editar el arma -->
+<form #armaForm="ngForm">
+  <div class="form-row py-2">
+    <div class="col-lg-6 col-md-12">
+      <label class="titulo"><b>NOMBRE<sup class="text-danger">*</sup></b></label>
+      <input type="text" class="form-control letra" [(ngModel)]="arma.nombre" placeholder="Nombre del arma"
+        name="nombre" required #nombre="ngModel" [ngClass]="{ 'is-invalid': nombre.invalid && (nombre.dirty || nombre.touched),
+      'is-valid': !nombre.invalid }"/>
+      <div class="text-danger" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+        <div *ngIf="nombre.errors.required">
+          El nombre del arma es obligatorio
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6 col-md-12">
+      <label class="titulo"><b>TIPO DE TIRO<sup class="text-danger">*</sup></b></label>
+      <select name="tipoTiro" id="tipoTiro" [(ngModel)]="arma.tipoTiro">
+        <option class=" letra" *ngFor="let tipoTiro of tiposTiro" [value]="tipoTiro">{{ tipoTiro }}</option>
+      </select>
+    </div> 
+  </div>
+  <div class="form-row justify-content-between pt-5">
+    <button type="button" class="btn guardar" (click)="editar()" [disabled]="!armaForm.form.valid">Guardar</button>
+    <button type="button" class="btn eliminar" (click)="eliminar()">Eliminar</button>
+  </div>
+</form>

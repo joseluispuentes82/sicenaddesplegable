@@ -1,0 +1,10 @@
+<!-- componente que muestra por información de las solicitudes, es llamado desde el componente Solicitudes-Recursos y Solicitudes-Todas -->
+<div class="row" (click)='editar(solicitud)'>
+  <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo" *ngIf="solicitud.usuarioNormal && solicitud.usuarioNormal.unidad"><fa-icon [icon]="faEdit" class="mr-2"></fa-icon><b><u>{{ solicitud.usuarioNormal.unidad.nombre | uppercase}}</u></b></div>
+  <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>{{ fechaSolicitudParse | date:'dd-MM-yyyy' }}</u></b></div>
+  <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>{{ solicitud.estado | uppercase }}</u></b></div>
+  <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo" *ngIf="solicitud.recurso"><b><u>{{ solicitud.recurso.nombre | titlecase }}</u></b></div>
+  <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>{{ solicitud.fechaHoraInicioRecurso }}</u></b></div>
+  <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b><u>{{ solicitud.fechaHoraFinRecurso }}</u></b></div>
+</div>
+<hr class='w-100'>

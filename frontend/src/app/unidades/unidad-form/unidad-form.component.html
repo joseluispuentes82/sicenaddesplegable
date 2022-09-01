@@ -1,0 +1,84 @@
+<!-- muestra el formulario para crear nuevas unidades -->
+<div class="container-fluid">
+  <div class="row ml-4 pl-3 mb-0 pb-0">
+    <a class="nav-link text-center volver" [routerLink]="volver" routerLinkActive="router-link-active">
+      <fa-icon class="fa-2x mr-2" [icon]="faVolver"></fa-icon><strong>Volver</strong></a>
+  </div>
+  <div class="row justify-content-center align-items-start mt-0 pt-0 mb-1">
+    <h3 class="mb-0 pb-0">CREAR UNIDAD</h3>
+    <hr class="w-100 mb-0 pb-0" />
+  </div>
+  <form #unidadForm="ngForm">
+    <div class="form-row py-2">
+      <div class="col-lg-4 col-md-12">
+        <label class="titulo"><b>NOMBRE<sup class="text-danger">*</sup></b></label>
+        <input type="text" class="form-control letra" [(ngModel)]="unidad.nombre" placeholder="Nombre de la unidad"
+          name="nombre" required #nombre="ngModel" [ngClass]="{ 'is-invalid': nombre.invalid && (nombre.dirty || nombre.touched),
+        'is-valid': !nombre.invalid }" />
+        <div class="text-danger" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+          <div *ngIf="nombre.errors.required">
+            El nombre de la unidad es obligatorio
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-12">
+        <label class="titulo"><b>TELÉFONO<sup class="text-danger">*</sup></b></label>
+        <input type="tel" class="form-control letra" [(ngModel)]="unidad.tfno"
+          placeholder="Teléfono de contacto de la unidad" name="telefono" required minlength="7" maxlength="9"
+          #telefono="ngModel" [ngClass]="{ 'is-invalid': telefono.invalid && (telefono.dirty || telefono.touched),
+          'is-valid': !telefono.invalid }" />
+        <div class="text-danger" *ngIf="telefono.invalid && (telefono.dirty || telefono.touched)">
+          <div *ngIf="telefono.errors.required">
+            El Teléfono de la unidad es obligatorio
+          </div>
+          <div *ngIf="telefono.errors.minlength || telefono.errors.maxlength">
+            El Teléfono debe tener 7-9 carácteres
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-12">
+        <label class="titulo"><b>EMAIL<sup class="text-danger">*</sup></b></label>
+        <input type="email" class="form-control letra" [(ngModel)]="unidad.email" placeholder="Email de contacto de la unidad" name="email"
+          #email="ngModel" [ngClass]="{ 'is-invalid': email.invalid && (email.dirty || email.touched),
+          'is-valid': !email.invalid }"/>
+        <div class="text-danger" *ngIf="email.invalid && (email.dirty || email.touched)">
+          <div *ngIf="email.errors.required">
+            El Email de la unidad es obligatorio
+        </div>
+          <div *ngIf="email.errors.email">
+            Introduzca un email valido ("@")
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12  pt-3">
+        <label class="titulo"><b>POC<sup class="text-danger">*</sup></b></label>
+        <input type="text" class="form-control letra" [(ngModel)]="unidad.poc" placeholder="POC de la unidad"
+          name="poc" required #poc="ngModel" [ngClass]="{ 'is-invalid': poc.invalid && (poc.dirty || poc.touched),
+        'is-valid': !poc.invalid }" />
+        <div class="text-danger" *ngIf="poc.invalid && (poc.dirty || poc.touched)">
+          <div *ngIf="poc.errors.required">
+            El POC de la unidad es obligatorio
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12 pt-3">
+        <label class="titulo"><b>DIRECCIÓN<sup class="text-danger">*</sup></b></label>
+        <input type="text" class="form-control letra" [(ngModel)]="unidad.direccion" placeholder="Dirección de la unidad" name="direccion"
+          required #direccion="ngModel" [ngClass]="{ 'is-invalid': direccion.invalid && (direccion.dirty || direccion.touched),
+          'is-valid': !direccion.invalid }"/>
+        <div class="text-danger" *ngIf="direccion.invalid && (direccion.dirty || direccion.touched)">
+          <div *ngIf="direccion.errors.required">
+              La dirección de la unidad es obligatoria
+          </div>
+        </div>
+      </div>    
+    </div>
+    <div class="form-row justify-content-between pt-5">
+      <div class="col-lg-5 col-md-12 mb-4">
+        <button class="btn text-white" role="button" (click)="crearUnidad()" [disabled]="!unidadForm.form.valid">
+          Crear Unidad
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

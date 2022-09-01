@@ -1,0 +1,10 @@
+{
+  "sizeMaxEscudo": 2,
+  "sizeMaxDocRecurso": 30,
+  "sizeMaxDocSolicitud": 30,
+  "sizeMaxCartografia": 3,
+  "tiempoMaximoLocalStorage": 48,
+  "tiposTiro": ["Tiro directo", "Tiro indirecto", "Tiro antiaereo"],
+  "hostSicenad": "https://sicenadfinal.herokuapp.com/api/",
+  "categoriaFicheroCartografia": "1"
+}

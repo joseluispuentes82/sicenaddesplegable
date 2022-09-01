@@ -1,0 +1,21 @@
+import { CategoriaFichero } from "src/app/categoriasFichero/models/categoriaFichero";
+import { Cenad } from "src/app/superadministrador/models/cenad";
+import { Cartografia } from "./cartografia";
+
+export class CartografiaImpl implements Cartografia {
+  idCartografia: string;
+  nombre: string;
+  descripcion: string;
+  nombreArchivo: string;
+  escala: string;
+  sistemaReferencia: string;
+  categoriaFichero: CategoriaFichero | any;
+  cenad: Cenad | string;
+  fechaCartografia: Date;
+  url: string;
+
+  constructor() {}
+  getId(url: string): string {
+    return url.slice(url.lastIndexOf('/') + 1, url.length);
+  }
+}

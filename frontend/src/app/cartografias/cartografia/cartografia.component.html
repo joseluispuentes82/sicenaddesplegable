@@ -1,0 +1,18 @@
+<!-- muestra en una linea cada cartografia, y con un modal se ven/editan sus datos -->
+<hr class='w-100'>
+<div class="row">
+  <div class="col-10 col-sm-10 col-md-4 col-lg-4 col-xl-4" *ngIf='isAdminCenad; else noAdminCenad'><a class="" data-toggle="modal"
+      data-target="#modalCartografia" (click)='cartografiaSeleccionada.emit(cartografia)'>
+      <fa-icon [icon]="faEdit" class="mr-2"></fa-icon>
+    </a>{{nombreMostrado | uppercase}}</div>
+  <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2">{{cartografia.escala}}</div>
+  <div class="col-10 col-sm-10 col-md-5 col-lg-5 col-xl-5"> {{descripcionMostrada | titlecase}}</div>
+  <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1">
+    <a class='href' [href]="pathArchivo(cartografia.nombreArchivo)">
+      <fa-icon [icon]="faDownload" class="mr-3"></fa-icon>
+    </a>
+  </div>
+</div>
+<ng-template #noAdminCenad>
+  <div class="col-10 col-sm-10 col-md-4 col-lg-4 col-xl-4">{{nombreMostrado | uppercase}}</div>
+</ng-template>

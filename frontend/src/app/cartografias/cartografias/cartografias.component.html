@@ -1,0 +1,41 @@
+<!-- muestra la tabla de las cartografias de un cenad -->
+<div class="container-fluid">
+  <div class="row mt-1">
+    <div class="col-9">
+      <h3 class="text-center titulo1"><u>GESTIÓN DE CARTOGRAFÍAS</u> </h3>
+    </div>
+    <div class="col-3 text-right" *ngIf='isAdminCenad'>
+      <button class="btn text-white" [routerLink]="['formulario/', idCenad]">Nueva Cartografía</button>
+    </div>
+  </div>
+  <hr class='w-100'>
+  <div class="row titulos mt-0">
+    <div class="col-10 col-sm-10 col-md-4 col-lg-4 col-xl-4 titulo"><b>NOMBRE</b></div>
+    <div class="col-10 col-sm-10 col-md-2 col-lg-2 col-xl-2 titulo"><b>ESCALA</b></div>
+    <div class="col-10 col-sm-10 col-md-5 col-lg-5 col-xl-5 titulo"><b>DESCRIPCIÓN</b></div>
+    <div class="col-10 col-sm-10 col-md-1 col-lg-1 col-xl-1 titulo"></div>
+  </div>
+  <div *ngFor="let cartografia of cartografias">
+    <app-cartografia [cartografia]="cartografia" (cartografiaSeleccionada)="verDatos($event)"></app-cartografia>
+  </div>
+  <!-- Modal cartografia-->
+  <div class="modal fade" id="modalCartografia" tabindex="-1" role="dialog" aria-labelledby="datosCartografia" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="datosCartografia"><b>Datos Completos de la Cartografia</b> </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <app-cartografia-ficha *ngIf='cartografiaVerDatos' [cartografia]='cartografiaVerDatos' (cartografiaEliminar)='onCartografiaEliminar($event)'
+            (cartografiaEditar)='onCartografiaEditar($event)'></app-cartografia-ficha>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn text-white" data-dismiss="modal" (click)="ngOnInit()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

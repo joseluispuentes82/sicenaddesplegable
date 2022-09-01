@@ -1,0 +1,25 @@
+<!-- vista inicial de cada cenad, personalizado con su escudo -->
+<div class="container-fluid">
+  <div class="row">
+    <div class="col col-md-8 escudo p-5">
+      <img class="cenad" [alt]="escudoCenad" [src]="pathImg" />
+    </div>
+    <div class="col col-md-4 enlaces p-4 mt-5">
+        <h3><fa-icon class="mr-2" [icon]="faEnlace"></fa-icon><u><strong>Enlaces más importantes</strong></u></h3>
+        <ul>
+          <li class="pt-4" [hidden]="!isSuperAdmin"><a [routerLink]="['calendarios', idCenad]">
+            <fa-icon class="mr-2" [icon]="faCalendario"></fa-icon>Planificar Recursos</a></li>
+          <li class="pt-4" [hidden]="isSuperAdmin"><a [routerLink]="['calendarios', idCenad]">
+            <fa-icon class="mr-2" [icon]="faCalendario"></fa-icon>Calendario</a></li>
+          <li class="pt-4"><a [routerLink]="['consultaRecursos', idCenad]" routerLinkActive="router-link-active">
+            <fa-icon class="mr-2" [icon]="faRecurso"></fa-icon>Consultar Recursos</a></li>
+          <li class="pt-4"><a [routerLink]="['cartografias', idCenad]" routerLinkActive="router-link-active">
+            <fa-icon class="mr-2" [icon]="faCartografia"></fa-icon>Cartografía</a></li>
+          <li class="pt-4" [hidden]="!isUserNormal"><a [routerLink]="['solicitudesRecursos', idCenad, 'formulario', idCenad, idSolicitud]">
+            <fa-icon class="mr-2" [icon]="faSolicitar"></fa-icon>Solicitar Recurso</a></li>
+          <li class="pt-4" [hidden]="isUserNormal"><a (click)="mensaje()">
+              <fa-icon class="mr-2" [icon]="faSolicitar"></fa-icon>Solicitar Recurso</a></li>
+        </ul>
+    </div>
+  </div>
+</div>
